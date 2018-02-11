@@ -1,0 +1,119 @@
+\documentclass[11pt, a4paper]{scrartcl}
+\usepackage[english]{babel}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{lmodern}        % Latin Modern family of fonts
+\usepackage[T1]{fontenc}    % fontenc is oriented to output, that is, what fonts to use for printing characters. 
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\graphicspath{{../figs/}}
+\usepackage{subcaption}
+%\usepackage{parskip}
+\usepackage{fancyhdr}
+\usepackage{vmargin}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{csquotes}
+\usepackage{bm}
+\usepackage{placeins}
+\usepackage{pdfpages}
+\usepackage{blindtext}
+
+
+\usepackage[list-final-separator={, and }]{siunitx}
+%\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
+\setmarginsrb{3 cm}{1.5 cm}{3 cm}{1.5 cm}{1 cm}{0.5 cm}{1 cm}{0.5 cm}
+\title{ Breast Cancer Wisconsin Data Set} % Title
+\author{Jannik Lukas Kossen \& Ahmad Neishabouri}                               % Author
+\date{\today}                                         % Date
+
+\makeatletter
+\let\thetitle\@title
+\let\theauthor\@author
+\let\thedate\@date
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\theauthor}
+\lhead{Fundamentals of Machine Learning}
+\cfoot{\thepage}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{titlepage}
+    \centering
+%    \vspace*{0.5 cm}
+    \includegraphics[scale = 0.6]{hdlogo}\\[2.0 cm]  % University Logo
+     \begin{flushleft}
+     \large  \hspace{1cm} A report on 
+	\end{flushleft}      
+     \centering
+    \rule{\linewidth}{0.2 mm} \\[0.4 cm]
+    { \huge \bfseries \thetitle}\\
+    \rule{\linewidth}{0.2 mm} \\[1.5 cm]
+    
+    \textsc{\LARGE Final Project}\\[0.5 cm]               % Course Code
+    \textsc{\Large Heidelberg Collaboratory \\[0.5em] for Image Processing}\\[2.0 cm]  % University Name
+    \thedate
+   	\\[3em]
+    \large
+            \emph{Submitted to:}\\[1em]
+            Prof. Dr. Ulrich Köthe \& Tutor: Lynton\\[1cm]
+            \emph{Submitted by:} \\[1.5em]
+            \begin{minipage}{0.4\textwidth}            
+            	\begin{flushleft} 
+					\large Jannik Kossen (3495228) \\
+					\small M.Sc. Physics, ungraded\\
+      		  \end{flushleft}
+      		 \end{minipage}
+            \begin{minipage}{0.4\textwidth}            
+            	\begin{flushright} 
+    	    	    \large Ahmad Neishabouri (3495228) \\ 
+         	   		\small M.Sc. Scientific Computing, graded
+      		  \end{flushright}
+      		 \end{minipage}\\[2 cm]
+
+
+        
+ 
+\end{titlepage}
+
+
+\tableofcontents
+\pagebreak
+
+%TODO neish student id
+%TODO fix titlepage (names and everything)
+%TODO proper cites of data set
+
+\begin{abstract}
+\Blindtext[1]
+\end{abstract}
+\section{Introduction}
+\paragraph{Some Paragraph.}
+\Blindtext
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{hdlogo}
+	\caption{A figure.}
+	\label{fig:class-incremental}
+\end{figure}
+
+\paragraph{Another Paragraph.}
+\Blindtext
+\section{Theoretical Background}
+\Blindtext
+\section{Experiments}
+\Blindtext
+\section{Discussion}
+\Blindtext
+\section{Summary}
+\Blindtext
+
+\section{Appendix}
+\end{document}
