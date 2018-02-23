@@ -13,7 +13,7 @@ introduction, theory of algorithms, data exploration, results of algorithms with
 - LDA (Neish)
 - QDA (Neish)
 - (k-) nearest Neighbour (Jannik)
-- --- Logistic Regression --- (is the same as QDA for binary classification problem) 
+- <s>Logistic Regression</s> (is the same as QDA for binary classification problem) 
 - Histograms
 - Density Trees
 - SVM (linear and kernel)
