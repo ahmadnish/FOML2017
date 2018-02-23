@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.12.4)  11 FEB 2018 12:32
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2018.2.23)  23 FEB 2018 15:29
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -748,21 +748,21 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip69
 ) (/usr/local/texlive/2017basic/texmf-dist/tex/latex/cleveref/cleveref.sty
-Package: cleveref 2013/12/28 v0.19 Intelligent cross-referencing
-Package cleveref Info: `hyperref' support loaded on input line 2230.
-LaTeX Info: Redefining \cref on input line 2230.
-LaTeX Info: Redefining \Cref on input line 2230.
-LaTeX Info: Redefining \crefrange on input line 2230.
-LaTeX Info: Redefining \Crefrange on input line 2230.
-LaTeX Info: Redefining \cpageref on input line 2230.
-LaTeX Info: Redefining \Cpageref on input line 2230.
-LaTeX Info: Redefining \cpagerefrange on input line 2230.
-LaTeX Info: Redefining \Cpagerefrange on input line 2230.
-LaTeX Info: Redefining \labelcref on input line 2230.
-LaTeX Info: Redefining \labelcpageref on input line 2230.
+Package: cleveref 2018/02/08 v0.21.1 Intelligent cross-referencing
+Package cleveref Info: `hyperref' support loaded on input line 2301.
+LaTeX Info: Redefining \cref on input line 2301.
+LaTeX Info: Redefining \Cref on input line 2301.
+LaTeX Info: Redefining \crefrange on input line 2301.
+LaTeX Info: Redefining \Crefrange on input line 2301.
+LaTeX Info: Redefining \cpageref on input line 2301.
+LaTeX Info: Redefining \Cpageref on input line 2301.
+LaTeX Info: Redefining \cpagerefrange on input line 2301.
+LaTeX Info: Redefining \Cpagerefrange on input line 2301.
+LaTeX Info: Redefining \labelcref on input line 2301.
+LaTeX Info: Redefining \labelcpageref on input line 2301.
 )
 (/usr/local/texlive/2017basic/texmf-dist/tex/latex/csquotes/csquotes.sty
-Package: csquotes 2017/03/11 v5.2b context-sensitive quotations (JAW)
+Package: csquotes 2018/02/11 v5.2c context-sensitive quotations (JAW)
 
 (/usr/local/texlive/2017basic/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2017/01/02 v2.4 e-TeX tools for LaTeX (JAW)
@@ -777,7 +777,7 @@ Package: etoolbox 2017/01/02 v2.4 e-TeX tools for LaTeX (JAW)
 \csq@ltx@everypar=\toks22
 
 (/usr/local/texlive/2017basic/texmf-dist/tex/latex/csquotes/csquotes.def
-File: csquotes.def 2017/03/11 v5.2b csquotes generic definitions (JAW)
+File: csquotes.def 2018/02/11 v5.2c csquotes generic definitions (JAW)
 )
 Package csquotes Info: Trying to load configuration file 'csquotes.cfg'...
 Package csquotes Info: ... configuration file loaded successfully.
@@ -1417,10 +1417,10 @@ Package rerunfilecheck Info: File `report.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 119.
  ) 
 Here is how much of TeX's memory you used:
- 24200 strings out of 494437
- 452037 string characters out of 6166645
- 630854 words of memory out of 5000000
- 27246 multiletter control sequences out of 15000+600000
+ 24415 strings out of 494437
+ 457947 string characters out of 6166645
+ 606363 words of memory out of 5000000
+ 27461 multiletter control sequences out of 15000+600000
  83473 words of font info for 69 fonts, out of 8000000 for 9000
  319 hyphenation exceptions out of 8191
  48i,12n,52p,10426b,848s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1431,7 +1431,7 @@ ive/2017basic/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/20
 17basic/texmf-dist/fonts/type1/public/lm/lmr12.pfb></usr/local/texlive/2017basi
 c/texmf-dist/fonts/type1/public/lm/lmri12.pfb></usr/local/texlive/2017basic/tex
 mf-dist/fonts/type1/public/lm/lmssbx10.pfb>
-Output written on report.pdf (8 pages, 716757 bytes).
+Output written on report.pdf (8 pages, 717205 bytes).
 PDF statistics:
  110 PDF objects out of 1000 (max. 8388607)
  91 compressed objects within 1 object stream
