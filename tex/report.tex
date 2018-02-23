@@ -20,12 +20,12 @@
 \usepackage{placeins}
 \usepackage{pdfpages}
 \usepackage{blindtext}
-
-
 \usepackage[list-final-separator={, and }]{siunitx}
+
+
 %\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
 \setmarginsrb{3 cm}{1.5 cm}{3 cm}{1.5 cm}{1 cm}{0.5 cm}{1 cm}{0.5 cm}
-\title{ Breast Cancer Wisconsin Data Set} % Title
+\title{Breast Cancer Wisconsin Data Set} % Title
 \author{Jannik Lukas Kossen \& Ahmad Neishabouri}                               % Author
 \date{\today}                                         % Date
 
@@ -40,6 +40,9 @@
 \rhead{\theauthor}
 \lhead{Fundamentals of Machine Learning}
 \cfoot{\thepage}
+
+% Fix BibTex error
+\setcitestyle{numbers}
 
 \begin{document}
 
@@ -67,13 +70,17 @@
             \emph{Submitted by:} \\[1.5em]
             \begin{minipage}{0.4\textwidth}            
             	\begin{flushleft} 
-					\large Jannik Kossen (3495228) \\
+					\large Jannik Lukas Kossen (JK) Student ID: 3495228 \\
 					\small M.Sc. Physics, ungraded\\
       		  \end{flushleft}
       		 \end{minipage}
             \begin{minipage}{0.4\textwidth}            
             	\begin{flushright} 
+<<<<<<< HEAD
     	    	    \large Ahmad Neishabouri (3436580) \\ 
+=======
+    	    	    \large Ahmad Neishabouri (AN) Student ID: XXXXXX \\ 
+>>>>>>> d421c8387480394b03bc5fc3784af2c52f3f1720
          	   		\small M.Sc. Scientific Computing, graded
       		  \end{flushright}
       		 \end{minipage}\\[2 cm]
@@ -91,29 +98,48 @@
 %TODO fix titlepage (names and everything)
 %TODO proper cites of data set
 
-\begin{abstract}
-\Blindtext[1]
-\end{abstract}
-\section{Introduction}
-\paragraph{Some Paragraph.}
-\Blindtext
-\begin{figure}
-	\centering
-	\includegraphics[width=0.7\textwidth]{hdlogo}
-	\caption{A figure.}
-	\label{fig:class-incremental}
-\end{figure}
+\section{Introduction (JK)}
+The following pages contain the report on our final project for the \emph{Fundamentals of Machine Learning} lecture given by Dr.\ Köthe in the last semester. As the lecture focussed on the \emph{fundamentals} of machine learning we see this project as an opportunity to explore and revise again some fundamental techniques of machine learning. Often, the application potential of these techniques on real-world tasks is rather small. However, they do constitute the foundations of more recent and better algorithms, which often embed or build upon these basic methods. 
+The focus of this project shall therefore not be to \emph{solve} a task using fundamental machine learning, but rather to carefully study the different algorithms and compare their strengths and shortcomings in comparison with each other. To narrow the focus of the project a bit, we have chosen to only compare \emph{classification} methods.
+We work with the \emph{Breast Cancer Wisconsin (Diagnostic) Data Set} \cite{street1993nuclear}, a binary classification task with the aim to identify whether a person does or does not have breast cancer based on a set of hand-crafted features. The data set should work very well for benchmarking algorithms, providing a nice balance between being well-behaved, i.e. solvable, and possessing enough depth and character to allow for some comparison between the algorithms, i.e. not being trivial to solve.
 
-\paragraph{Another Paragraph.}
-\Blindtext
+\paragraph{Structure.} The structure of this report is as follows. \Cref{sec:theo} discusses the theoretical foundations of each of the compared methods. In \cref{sec:expe}, unsupervised exploration techniques are employed to gain some understanding of the shape of our data set. The classification methods are applied and benchmarked. \Cref{sec:discu} then discusses these results in relation to peculiarities of each method and the data set.
+
+As demanded by the faculty of Mathematics and Computer Science, each section or paragraph heading also contains a shorthand symbol, \emph{(JK)} or \emph{(AN)}, to indiciate whether a certain section was written by Jannik Kossen or Ahmad Neishabouri.
+
+%\begin{figure}
+%	\centering
+%	\includegraphics[width=0.7\textwidth]{hdlogo}
+%	\caption{A figure.}
+%	\label{fig:class-incremental}
+%\end{figure}
+
 \section{Theoretical Background}
-\Blindtext
+\label{sec:theo}
+
+\paragraph{Preliminary Remarks (JK).}
+Note that, unless marked otherwise, the theoretical derivation and description attempt follow the notation of the lecture \cite{kothe2018foml} for clarity.
+This includes the convention to describe the data as $X = \left\{ X_1, X_2, \ddots, X_N \right\}$, where $N$ is the number of instances and each $X_i$ is a $D$-dimensional feature (row) vector. The feature $j$  of instance $i$ is therefore given by $X_{ij}$.  Index $i$ is solely used to index along the $N$-dimensional instance axis, whereas $j$ solely indexes the $D$-dimensional feature axis.
+
+
+
+
 \section{Experiments}
-\Blindtext
+\label{sec:expe}
+
+\subsection{Data Set -- Breast Cancer Wisconsin (JK)}
+Before we 
+
+
 \section{Discussion}
-\Blindtext
+\label{sec:discu}
+
 \section{Summary}
-\Blindtext
 
 \section{Appendix}
+
+
+\bibliographystyle{ieeetr}
+\bibliography{bibliography}
+
 \end{document}
