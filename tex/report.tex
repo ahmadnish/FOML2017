@@ -81,20 +81,21 @@
       		 \end{minipage}
             \begin{minipage}{0.4\textwidth}            
             	\begin{flushright} 
-    	    	    			\large Ahmad Neishabouri (AN) Student ID: 3436580 \\ 
- 			        	\small M.Sc. Scientific Computing, graded
+    	    	    \large Ahmad Neishabouri (AN) Student ID: XXXXXX \\ 
+         	   		\small M.Sc. Scientific Computing, graded
       		  \end{flushright}
       		 \end{minipage}\\[2 cm]
 
 
-     
+        
+ 
 \end{titlepage}
 
 
 \tableofcontents
 \pagebreak
 
-
+%TODO neish student id
 %TODO fix titlepage (names and everything)
 
 % How to include a figure.
@@ -113,7 +114,7 @@ We work with the \emph{Breast Cancer Wisconsin (Diagnostic) Data Set} \cite{stre
 \paragraph{Data Set.} The abovementioned data set was first published alongside a paper called \emph{Nuclear Feature Extraction For Breast Cancer Diagnosis} \cite{street1993nuclear} in the 1993 edition of the \emph{International Symposium on Electronic Imaging: Science and Technology}, wherein a classification pipeline for breast cancer diagnosis is proposed. A small sample of skin tissue is extracted from the patients breast and analyzed using a camera mounted atop a microscope. Using an interactive tool the operator identifies individual cell nuclei, whose outlines are then semi-automatically determined. For each nucleus, ten features that are sought to describe the geometric shape and appearance of the nucleus are crafted. These features are the radius, perimeter, area, compactness, smoothness, concavity, concave points, symmetry, fractal dimension, and texture of the nucleus.
 For the sake of brevity, the reader is referred to the original publication \cite{street1993nuclear} for a detailed description of how these features are calculated from the image and outline of a nucleus. 
 The mean, max, and standard deviation values of these features is then calculated for the nuclei of a single sample, giving in total a 30-dimensional feature vector describing each cell nucleus.
-The hope here is obviously, that these features (or a subset thereof) capture the differentiating aspect of tumor-ridden cell nuclei from their healthy counterparts. The data set is explored further in \cref{sec:expl}.
+The hope here is obviously, that these features (or a subset thereof) capture the differentiating aspect of tumor-ridden cell nuclei from their healthy counterparts. The data set is explored further in \cref{sec:expe}.
 
 \paragraph{Structure.} The structure of this report is as follows. \Cref{sec:theo} discusses the theoretical foundations of each of the compared methods. In \cref{sec:expe}, unsupervised exploration techniques are employed to gain some understanding of the shape of our data set. The classification methods are applied and benchmarked. \Cref{sec:discu} then discusses these results in relation to peculiarities of each method and the data set.
 
