@@ -1,4 +1,4 @@
-\documentclass[11pt, a4paper]{scrartcl}
+\documentclass[12pt, a4paper]{scrartcl}
 \usepackage[english]{babel}
 \usepackage{natbib}
 \usepackage{url}
@@ -43,6 +43,11 @@
 
 % Fix BibTex error
 \setcitestyle{numbers}
+
+% Define argmin, max
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
 
 \begin{document}
 
@@ -92,17 +97,8 @@
 
 %TODO neish student id
 %TODO fix titlepage (names and everything)
-%TODO proper cites of data set
 
-\section{Introduction (JK)}
-The following pages contain the report on our final project for the \emph{Fundamentals of Machine Learning} lecture given by Dr.\ Köthe in the last semester. As the lecture focussed on the \emph{fundamentals} of machine learning we see this project as an opportunity to explore and revise again some fundamental techniques of machine learning. Often, the application potential of these techniques on real-world tasks is rather small. However, they do constitute the foundations of more recent and better algorithms, which often embed or build upon these basic methods. 
-The focus of this project shall therefore not be to \emph{solve} a task using fundamental machine learning, but rather to carefully study the different algorithms and compare their strengths and shortcomings in comparison with each other. To narrow the focus of the project a bit, we have chosen to only compare \emph{classification} methods.
-We work with the \emph{Breast Cancer Wisconsin (Diagnostic) Data Set} \cite{street1993nuclear}, a binary classification task with the aim to identify whether a person does or does not have breast cancer based on a set of hand-crafted features. The data set should work very well for benchmarking algorithms, providing a nice balance between being well-behaved, i.e. solvable, and possessing enough depth and character to allow for some comparison between the algorithms, i.e. not being trivial to solve.
-
-\paragraph{Structure.} The structure of this report is as follows. \Cref{sec:theo} discusses the theoretical foundations of each of the compared methods. In \cref{sec:expe}, unsupervised exploration techniques are employed to gain some understanding of the shape of our data set. The classification methods are applied and benchmarked. \Cref{sec:discu} then discusses these results in relation to peculiarities of each method and the data set.
-
-As demanded by the faculty of Mathematics and Computer Science, each section or paragraph heading also contains a shorthand symbol, \emph{(JK)} or \emph{(AN)}, to indiciate whether a certain section was written by Jannik Kossen or Ahmad Neishabouri.
-
+% How to include a figure.
 %\begin{figure}
 %	\centering
 %	\includegraphics[width=0.7\textwidth]{hdlogo}
@@ -110,25 +106,54 @@ As demanded by the faculty of Mathematics and Computer Science, each section or 
 %	\label{fig:class-incremental}
 %\end{figure}
 
+\section{Introduction (JK)}
+The following pages contain the report on our final project for the \emph{Fundamentals of Machine Learning} lecture given by Dr.\ Köthe in the last semester. As the lecture focused on the \emph{fundamentals} of machine learning we see this project as an opportunity to explore and revise again some fundamental techniques of machine learning. Often, the application potential of these techniques on real-world tasks is rather small. However, they do constitute the foundations of more recent and better algorithms, which often embed or build upon these basic methods. 
+The focus of this project shall therefore not be to \emph{solve} a task using fundamental machine learning, but rather to carefully study the different algorithms and compare their strengths and shortcomings in comparison with each other. To narrow the focus of the project a bit, we have chosen to only compare \emph{classification} methods.
+We work with the \emph{Breast Cancer Wisconsin (Diagnostic) Data Set} \cite{street1993nuclear}, a binary classification task with the aim to identify whether a person does or does not have breast cancer based on a set of hand-crafted features. The data set should work very well for benchmarking algorithms, providing a nice balance between being well-behaved, i.e. solvable, and possessing enough depth and character to allow for some comparison between the algorithms, i.e. not being trivial to solve.
+
+\paragraph{Data Set.} The abovementioned data set was first published alongside a paper called \emph{Nuclear Feature Extraction For Breast Cancer Diagnosis} \cite{street1993nuclear} in the 1993 edition of the \emph{International Symposium on Electronic Imaging: Science and Technology}, wherein a classification pipeline for breast cancer diagnosis is proposed. A small sample of skin tissue is extracted from the patients breast and analyzed using a camera mounted atop a microscope. Using an interactive tool the operator identifies individual cell nuclei, whose outlines are then semi-automatically determined. For each nucleus, ten features that are sought to describe the geometric shape and appearance of the nucleus are crafted. These features are the radius, perimeter, area, compactness, smoothness, concavity, concave points, symmetry, fractal dimension, and texture of the nucleus.
+For the sake of brevity, the reader is referred to the original publication \cite{street1993nuclear} for a detailed description of how these features are calculated from the image and outline of a nucleus. 
+The mean, max, and standard deviation values of these features is then calculated for the nuclei of a single sample, giving in total a 30-dimensional feature vector describing each cell nucleus.
+The hope here is obviously, that these features (or a subset thereof) capture the differentiating aspect of tumor-ridden cell nuclei from their healthy counterparts. The data set is explored further in \cref{sec:expl}.
+
+\paragraph{Structure.} The structure of this report is as follows. \Cref{sec:theo} discusses the theoretical foundations of each of the compared methods. In \cref{sec:expe}, unsupervised exploration techniques are employed to gain some understanding of the shape of our data set. The classification methods are applied and benchmarked. \Cref{sec:discu} then discusses these results in relation to peculiarities of each method and the data set.
+
+As demanded by the faculty of Mathematics and Computer Science, each section or paragraph heading also contains a shorthand symbol, \emph{(JK)} or \emph{(AN)}, to indicate whether a certain section was written by Jannik Kossen or Ahmad Neishabouri.
+
 \section{Theoretical Background}
 \label{sec:theo}
 
-\paragraph{Preliminary Remarks (JK).}
-Note that, unless marked otherwise, the theoretical derivation and description attempt follow the notation of the lecture \cite{kothe2018foml} for clarity.
-This includes the convention to describe the data as $X = \left\{ X_1, X_2, \ddots, X_N \right\}$, where $N$ is the number of instances and each $X_i$ is a $D$-dimensional feature (row) vector. The feature $j$  of instance $i$ is therefore given by $X_{ij}$.  Index $i$ is solely used to index along the $N$-dimensional instance axis, whereas $j$ solely indexes the $D$-dimensional feature axis.
+\paragraph{Preliminary Remarks (JK).} Note that, unless marked otherwise, the theoretical derivation and description attempt follow the notation of the lecture \cite{kothe2018foml} for clarity.
+This includes the convention to describe the data as $X = { X_1, X_2, \dots, X_N}$, where $N$ is the number of instances and each $X_i$ is a $D$-dimensional feature (row) vector. The feature $j$ of instance $i$ is therefore given by $X_{ij}$.  Index $i$ is solely used to index along the $N$-dimensional instance axis, whereas $j$ solely indexes the $D$-dimensional feature axis. The labels or ground truth instances of supervised learning are given as $Y_i$.
 
-
-
+\paragraph{(k-) Nearest Neighbor Classification (JK).} One of the simplest approaches to classification is the the nearest neigbor (NN) classifier. Test set instances $i$ are simply classified with the same class as their \emph{nearest} neighbor from the training set (TS). 
+Which neighbor is the \emph{nearest} is given by some distance metric $d(X_i, X_{i^\prime})$ between to instances $X_i$ and $X_{i^\prime}$. $d(X_i, X_{i^\prime})$ is often chosen to be simply the Euclidean distance.
+In mathematical terms, the decision function for the NN classifier can be written as
+\begin{align*}
+	f_{\mathrm{NN}} = Y_i \quad \text{, where } i = \argmin_{i^\prime \in \mathrm{TS}} d(X_i, X_{i^\prime}) \, .
+\end{align*}
+The NN classifier requires the total memorization of the training set which becomes problematic for larger data sets.
+A simple variant of the NN classifier is the k-nearest neighbor algorithm, which classifies instances by taking a majority vote of the classes of the surrounding k-nearest neighbors of the instance that is to be classified. In contrast to the simple NN classifier, the k-NN classifier is consistent, i.e. the k-NN classifier converges to the optimal Bayes classifier as $N->\infty$.
 
 \section{Experiments}
 \label{sec:expe}
 
-\subsection{Data Set -- Breast Cancer Wisconsin (JK)}
-Before we 
+\subsection{Exploratory Analysis (JK)}
+Before the introduced classification methods are applied, it is crucial that some time is spent on exploring the \emph{Breast Cancer Wisconsin Data Set}.
+The data set consists of $N=569$ instances with $D=30$ dimensions per instance. The data is somewhat imbalanced as \SI{63}{\percent} of the instances are false, i.e. come from benign cells without breast cancer. This might have to be accounted for in the analysis.
+Data will be centered and standardized according to the training set distribution unless otherwise mentioned.
 
+\subsection{Performance Evaluation (JK) }
+In order to provide reliable performance analysis, 10-fold cross-validation as described in the lecture is employed for each algorithm. A strict separation of training and test set is ensured such that meaningful statements over the predictive power of the methods can be made.
+Whenever an algorithm has hyperparameters an exhaustive grid search is performed in order to find the best-performing set of parameters. \emph{Performance} is given in terms of precision-recall graphs. 
+
+% Validation data is only needed when we compare different models. The cross validation might just yield a "lucky" winner. (Using different models on the test set can be seen as overfitting the test set. The winning model might have just been lucky. 
 
 \section{Discussion}
 \label{sec:discu}
+
+%TODO unfortunately original images are not available. otherwise could have trained CNN to do it all automatically just like thorsten did in his paper
+
 
 \section{Summary}
 
