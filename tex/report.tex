@@ -21,7 +21,7 @@
 \usepackage{pdfpages}
 \usepackage{blindtext}
 \usepackage[list-final-separator={, and }]{siunitx}
-
+\usepackage{mathtools}
 
 %\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
 \setmarginsrb{3 cm}{1.5 cm}{3 cm}{1.5 cm}{1 cm}{0.5 cm}{1 cm}{0.5 cm}
@@ -71,7 +71,7 @@
    	\\[3em]
     \large
             \emph{Submitted to:}\\[1em]
-            Prof. Dr. Ulrich Köthe \& Tutor: Lynton\\[1cm]
+            Prof.\ Dr.\ Ulrich Köthe \& Tutor: Lynton\\[1cm]
             \emph{Submitted by:} \\[1.5em]
             \begin{minipage}{0.4\textwidth}            
             	\begin{flushleft} 
@@ -98,7 +98,9 @@
 %TODO neish student id
 %TODO work in jupyter notebook comments 
 %TODO theory PCA
-
+%TODO centralise for PCA! dont normalise necessarily
+%TODO reread algorithms in barbers book
+%TODO figure out if imbalance is a problem
 %TODO fix titlepage (names and everything)
 
 % How to include a figure.
@@ -126,30 +128,97 @@ As demanded by the faculty of Mathematics and Computer Science, each section or 
 \section{Theoretical Background}
 \label{sec:theo}
 
-\paragraph{Preliminary Remarks (JK).} Note that, unless marked otherwise, the theoretical derivation and description attempt follow the notation of the lecture \cite{kothe2018foml} for clarity.
+\paragraph{Preliminary Remarks (JK).} Note that, unless marked otherwise, the theoretical derivation and description attempt to follow the notation of the lecture \cite{kothe2018foml} for clarity.
 This includes the convention to describe the data as $X = { X_1, X_2, \dots, X_N}$, where $N$ is the number of instances and each $X_i$ is a $D$-dimensional feature (row) vector. The feature $j$ of instance $i$ is therefore given by $X_{ij}$.  Index $i$ is solely used to index along the $N$-dimensional instance axis, whereas $j$ solely indexes the $D$-dimensional feature axis. The labels or ground truth instances of supervised learning are given as $Y_i$.
+
+\paragraph{Principal Component Analysis (JK).} Principal Component Analysiss (PCA) is a simple yet effective dimension reduction technique. Often, it is also used exploratively to gain an understanding of the complexity of the data set. In PCA, we aim to map instances $X_i$ of the original feature space $\mathbb{R}^D$ to features $Z_i$ in a new feature space $\mathbb{R}^{D^\prime}$ via a linear mapping
+\begin{align}
+	Z_i = X_i A + b \, 
+\end{align}
+where $A$, a $D\times D^\prime$ matrix, and $b$ are the parameters of the linear mapping. We now define a mapping from $\mathbb{R}^{D^\prime}$  back to the original space $\mathbb{R}^D$ as
+\begin{align}
+	\tilde{X}_i = V Z_i + \mu \, ,
+\end{align}
+where for the sake of simplicity we assume $D^\prime=1$.
+The ideal linear mapping between the two feature spaces is now found by demanding that the squared loss between the original $X_i$ and the reconstruction $\tilde{X}_i$ is minimized
+\begin{align}
+	\argmin_{V, \mu, \{Z_i\}} \: \sum_i \left( X_i - \tilde{X}_i \right)^2 \, .
+\end{align}
+By requiring centralized data $\bar{X}=0$, setting the arbitrary $\bar{Z}=0$, and requiring normalized $V^TV$, one finds the simplified version (see lecture for full derivation
+\begin{align}
+	&\argmin_{V, \{Z_i\}} \: \sum_i ( X_i - 
+														\underbrace{V Z_i}_{\mathclap{=(X_i V^T)V}}
+														)^2 \quad
+														\text{s.t.} \enspace V^TV=1  \\
+	&\argmax_{V, \lambda} \: VSV^T + \lambda \,  (1-VV^T) \, ,													\end{align}
+where $\lambda$ is the Lagrange parameter for the constraint on $V$ and $S$ is the scatter matrix $S = \sum_i X_i^T X_I$. 
+The derivation is presented in such detail here because an important insight can be gained  by deriving the above expression w.\ r\. t.\ $V$,
+\begin{align}
+	S V^T = \lambda V^T \, ,
+\end{align}
+$V^T$ is an eigenvector of S. Substituting this into the above problem simply yields
+\begin{align}
+	\argmax_\lambda \lambda \, .
+\end{align}
+The projection problem therefore has been reduced to finding the biggest eigenvector of S. In other words: if we want to linearly project our data into a one-dimensional feature space while retaining maximal information, we project along the direction of $V$, the vector belonging to the biggest eigenvalue $\lambda$ of the scatter matrix. Similarly, if we want to transform to a $D^\prime$ dimensional feature space, we project the original data instances along the $D^\prime$ largest eigenvectors $V_j$. Given by the optimization constraint above, the features (eigenvectors) of the new space are orthogonal. 
+
+It can be shown that the projection vectors $V_j$, sorted by their eigenvalue size, project the data along those orthogonal axes that lie along the direction of maximal variance. This is because axes with a lot of variance contain a lot of information and therefore minimize the loss of information when transforming to the new feature space.
+
 
 \paragraph{(k-) Nearest Neighbor Classification (JK).} One of the simplest approaches to classification is the the nearest neigbor (NN) classifier. Test set instances $i$ are simply classified with the same class as their \emph{nearest} neighbor from the training set (TS). 
 Which neighbor is the \emph{nearest} is given by some distance metric $d(X_i, X_{i^\prime})$ between to instances $X_i$ and $X_{i^\prime}$. $d(X_i, X_{i^\prime})$ is often chosen to be simply the Euclidean distance.
 In mathematical terms, the decision function for the NN classifier can be written as
 \begin{align*}
-	f_{\mathrm{NN}} = Y_i \quad \text{, where } i = \argmin_{i^\prime \in \mathrm{TS}} d(X_i, X_{i^\prime}) \, .
+	f_{\mathrm{NN}} = Y_i \, \text{,  where } \, i = \argmin_{i^\prime \in \mathrm{TS}} \: d(X_i, X_{i^\prime}) \, .
 \end{align*}
 The NN classifier requires the total memorization of the training set which becomes problematic for larger data sets.
-A simple variant of the NN classifier is the k-nearest neighbor algorithm, which classifies instances by taking a majority vote of the classes of the surrounding k-nearest neighbors of the instance that is to be classified. In contrast to the simple NN classifier, the k-NN classifier is consistent, i.e. the k-NN classifier converges to the optimal Bayes classifier as $N->\infty$.
+A simple variant of the NN classifier is the k-nearest neighbor algorithm, which classifies instances by taking a majority vote of the classes of the surrounding k-nearest neighbors of the instance that is to be classified. In contrast to the simple NN classifier, the k-NN classifier is consistent, i.e. the k-NN classifier converges to the optimal Bayes classifier as $N\to\infty$.
 
 \section{Experiments}
 \label{sec:expe}
 
-\subsection{Exploratory Analysis (JK)}
+\subsection{Exploratory Analysis \& Introduction to the Data Set (JK)}
 Before the introduced classification methods are applied, it is crucial that some time is spent on exploring the \emph{Breast Cancer Wisconsin Data Set}.
 The data set consists of $N=569$ instances with $D=30$ dimensions per instance. The data is somewhat imbalanced as \SI{63}{\percent} of the instances are false, i.e. come from benign cells without breast cancer. This might have to be accounted for in the analysis.
 Data will be centered and standardized according to the training set distribution unless otherwise mentioned.
+To get a feeling for the data set, 16 random combinations of two dimensions of the data set are shown in a scatter plot in \cref{fig:random_scatter}. While for some features, the different classes are clumped together, we can already see that for others a separation might be possible.
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{random_scatter}
+	\caption{Shown are random 2D slices of the data set. Given in parenthesis are the dimensions that give the $(x,y)$ axis of the plot.}
+\end{figure}
 
-\subsection{Performance Evaluation (JK) }
-In order to provide reliable performance analysis, 10-fold cross-validation as described in the lecture is employed for each algorithm. A strict separation of training and test set is ensured such that meaningful statements over the predictive power of the methods can be made.
+Following this hunch, a continued investigation of the data set is therefore pursued via principal component analysis.
+The results of the principal component analysis are given in \cref{fig:pca}. We can see that the linear PCA is already fairly successful at separating the data set. Note, that as PCA is an unsupervised method, it has not been given any labels. Labels are only plotted for clarity. In \cref{fig:pca1} one can see that just by projecting the data among axes of high variance, the two class labels are somewhat separated. \Cref{fig:pca2} shows that the projection vectors actually point along axes of high variance in the original space. Note, that the two vectors being shown here only \emph{seem} to note be orthogonal, due to the fact that a 2D slice of the 30 dimensional feature space is shown. Finally, \Cref{fig:pca3} shows that the first component of the PCA can almost explain \SI{5}{\percent} of the variance in the data, if the first 6 components are combined this rises to \SI{90}{\percent}. 
+The dimensions in \cref{fig:pca2} were chosen as the highest contributors to the first component of the PCA, which is why the also exhibit a high variance.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{pca_1}
+        \caption{}
+        \label{fig:pca1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{pca_3}
+        \caption{}
+        \label{fig:pca2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{pca_2}
+        \caption{}
+        \label{fig:pca3}
+    \end{subfigure}
+    \caption{PCA of Data Set: (a) shows the two most important dimensions of the data set in the transformed space, (b) shows how the PCA projects along axes of maximal variance, the arrows indicate the direction of projection, (c) shows the explained variance of the original data set per PCA component.}\label{fig:pca}
+\end{figure}
+
+In conclusion, PCA can be successfully applied to this data set as a dimensionality reduction technique. The transformed, lower-dimensional data can then be used as an input to other classification algorithms. The success of the linear PCA also shows that the complexity of the data set is somewhat limited and that we can expect successful results from simple methods.
+
+\subsection{Classification Algorithms}
+\paragraph{Evaluation (JK).} In order to provide reliable performance analysis, 10-fold cross-validation as described in the lecture is employed for each algorithm. A strict separation of training and test set is ensured such that meaningful statements over the predictive power of the methods can be made.
 Whenever an algorithm has hyperparameters an exhaustive grid search is performed in order to find the best-performing set of parameters. \emph{Performance} is given in terms of precision-recall graphs. 
 
+\paragraph{(k-) Nearest Neighbor (JK).}
 % Validation data is only needed when we compare different models. The cross validation might just yield a "lucky" winner. (Using different models on the test set can be seen as overfitting the test set. The winning model might have just been lucky. 
 
 \section{Discussion}
