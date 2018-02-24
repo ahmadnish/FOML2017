@@ -21,7 +21,7 @@
 \usepackage{pdfpages}
 \usepackage{blindtext}
 \usepackage[list-final-separator={, and }]{siunitx}
-
+\usepackage{mathtools}
 
 %\setmarginsrb{3 cm}{2.5 cm}{3 cm}{2.5 cm}{1 cm}{1.5 cm}{1 cm}{1.5 cm}
 \setmarginsrb{3 cm}{1.5 cm}{3 cm}{1.5 cm}{1 cm}{0.5 cm}{1 cm}{0.5 cm}
@@ -71,7 +71,7 @@
    	\\[3em]
     \large
             \emph{Submitted to:}\\[1em]
-            Prof. Dr. Ulrich Köthe \& Tutor: Lynton\\[1cm]
+            Prof.\ Dr.\ Ulrich Köthe \& Tutor: Lynton\\[1cm]
             \emph{Submitted by:} \\[1.5em]
             \begin{minipage}{0.4\textwidth}            
             	\begin{flushleft} 
@@ -95,14 +95,16 @@
 \tableofcontents
 \pagebreak
 
-<<<<<<< HEAD
-=======
-%TODO neish student id
-%TODO work in jupyter notebook comments 
-%TODO theory PCA
->>>>>>> b4c694b0de3d2d6768b8c9dad14a7b993574c651
 
-%TODO fix titlepage (names and everything)
+
+
+%TODO fix titlepage (names and everything) 
+%TODO centralise for PCA! dont normalise necessarily
+%TODO reread algorithms in barbers book
+%TODO figure out if imbalance is a problem
+%TODO  put this in?
+% Validation data is only needed when we compare different models. The cross validation might just yield a "lucky" winner. (Using different models on the test set can be seen as overfitting the test set. The winning model might have just been lucky. 
+
 
 % How to include a figure.
 %\begin{figure}
@@ -129,31 +131,129 @@ As demanded by the faculty of Mathematics and Computer Science, each section or 
 \section{Theoretical Background}
 \label{sec:theo}
 
-\paragraph{Preliminary Remarks (JK).} Note that, unless marked otherwise, the theoretical derivation and description attempt follow the notation of the lecture \cite{kothe2018foml} for clarity.
+\paragraph{Preliminary Remarks (JK).} Note that, unless marked otherwise, the theoretical derivation and description attempt to follow the notation of the lecture \cite{kothe2018foml} for clarity.
 This includes the convention to describe the data as $X = { X_1, X_2, \dots, X_N}$, where $N$ is the number of instances and each $X_i$ is a $D$-dimensional feature (row) vector. The feature $j$ of instance $i$ is therefore given by $X_{ij}$.  Index $i$ is solely used to index along the $N$-dimensional instance axis, whereas $j$ solely indexes the $D$-dimensional feature axis. The labels or ground truth instances of supervised learning are given as $Y_i$.
+
+\paragraph{Principal Component Analysis (JK).} Principal Component Analysiss (PCA) is a simple yet effective dimension reduction technique. Often, it is also used exploratively to gain an understanding of the complexity of the data set. In PCA, we aim to map instances $X_i$ of the original feature space $\mathbb{R}^D$ to features $Z_i$ in a new feature space $\mathbb{R}^{D^\prime}$ via a linear mapping
+\begin{align}
+	Z_i = X_i A + b \, 
+\end{align}
+where $A$, a $D\times D^\prime$ matrix, and $b$ are the parameters of the linear mapping. We now define a mapping from $\mathbb{R}^{D^\prime}$  back to the original space $\mathbb{R}^D$ as
+\begin{align}
+	\tilde{X}_i = V Z_i + \mu \, ,
+\end{align}
+where for the sake of simplicity we assume $D^\prime=1$.
+The ideal linear mapping between the two feature spaces is now found by demanding that the squared loss between the original $X_i$ and the reconstruction $\tilde{X}_i$ is minimized
+\begin{align}
+	\argmin_{V, \mu, \{Z_i\}} \: \sum_i \left( X_i - \tilde{X}_i \right)^2 \, .
+\end{align}
+By requiring centralized data $\bar{X}=0$, setting the arbitrary $\bar{Z}=0$, and requiring normalized $V^TV$, one finds the simplified version (see lecture for full derivation
+\begin{align}
+	&\argmin_{V, \{Z_i\}} \: \sum_i ( X_i - 
+														\underbrace{V Z_i}_{\mathclap{=(X_i V^T)V}}
+														)^2 \quad
+														\text{s.t.} \enspace V^TV=1  \\
+	&\argmax_{V, \lambda} \: VSV^T + \lambda \,  (1-VV^T) \, ,													\end{align}
+where $\lambda$ is the Lagrange parameter for the constraint on $V$ and $S$ is the scatter matrix $S = \sum_i X_i^T X_I$. 
+The derivation is presented in such detail here because an important insight can be gained  by deriving the above expression w.\ r\. t.\ $V$,
+\begin{align}
+	S V^T = \lambda V^T \, ,
+\end{align}
+$V^T$ is an eigenvector of S. Substituting this into the above problem simply yields
+\begin{align}
+	\argmax_\lambda \lambda \, .
+\end{align}
+The projection problem therefore has been reduced to finding the biggest eigenvector of S. In other words: if we want to linearly project our data into a one-dimensional feature space while retaining maximal information, we project along the direction of $V$, the vector belonging to the biggest eigenvalue $\lambda$ of the scatter matrix. Similarly, if we want to transform to a $D^\prime$ dimensional feature space, we project the original data instances along the $D^\prime$ largest eigenvectors $V_j$. Given by the optimization constraint above, the features (eigenvectors) of the new space are orthogonal. 
+
+It can be shown that the projection vectors $V_j$, sorted by their eigenvalue size, project the data along those orthogonal axes that lie along the direction of maximal variance. This is because axes with a lot of variance contain a lot of information and therefore minimize the loss of information when transforming to the new feature space.
+
 
 \paragraph{(k-) Nearest Neighbor Classification (JK).} One of the simplest approaches to classification is the the nearest neigbor (NN) classifier. Test set instances $i$ are simply classified with the same class as their \emph{nearest} neighbor from the training set (TS). 
 Which neighbor is the \emph{nearest} is given by some distance metric $d(X_i, X_{i^\prime})$ between to instances $X_i$ and $X_{i^\prime}$. $d(X_i, X_{i^\prime})$ is often chosen to be simply the Euclidean distance.
 In mathematical terms, the decision function for the NN classifier can be written as
 \begin{align*}
-	f_{\mathrm{NN}} = Y_i \quad \text{, where } i = \argmin_{i^\prime \in \mathrm{TS}} d(X_i, X_{i^\prime}) \, .
+	f_{\mathrm{NN}} = Y_i \, \text{,  where } \, i = \argmin_{i^\prime \in \mathrm{TS}} \: d(X_i, X_{i^\prime}) \, .
 \end{align*}
 The NN classifier requires the total memorization of the training set which becomes problematic for larger data sets.
-A simple variant of the NN classifier is the k-nearest neighbor algorithm, which classifies instances by taking a majority vote of the classes of the surrounding k-nearest neighbors of the instance that is to be classified. In contrast to the simple NN classifier, the k-NN classifier is consistent, i.e. the k-NN classifier converges to the optimal Bayes classifier as $N->\infty$.
+A simple variant of the NN classifier is the k-nearest neighbor algorithm, which classifies instances by taking a majority vote of the classes of the surrounding k-nearest neighbors of the instance that is to be classified. In contrast to the simple NN classifier, the k-NN classifier is consistent, i.e. the k-NN classifier converges to the optimal Bayes classifier as $N\to\infty$.
 
-\section{Experiments}
+\section{Experiments \& Discussion}
 \label{sec:expe}
 
-\subsection{Exploratory Analysis (JK)}
+\subsection{Exploratory Analysis \& Introduction to the Data Set (JK)}
 Before the introduced classification methods are applied, it is crucial that some time is spent on exploring the \emph{Breast Cancer Wisconsin Data Set}.
 The data set consists of $N=569$ instances with $D=30$ dimensions per instance. The data is somewhat imbalanced as \SI{63}{\percent} of the instances are false, i.e. come from benign cells without breast cancer. This might have to be accounted for in the analysis.
 Data will be centered and standardized according to the training set distribution unless otherwise mentioned.
+To get a feeling for the data set, 16 random combinations of two dimensions of the data set are shown in a scatter plot in \cref{fig:random_scatter}. While for some features, the different classes are clumped together, we can already see that for others a separation might be possible.
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{random_scatter}
+	\caption{Shown are random 2D slices of the data set. Given in parenthesis are the dimensions that give the $(x,y)$ axis of the plot.}
+\end{figure}
 
-\subsection{Performance Evaluation (JK) }
-In order to provide reliable performance analysis, 10-fold cross-validation as described in the lecture is employed for each algorithm. A strict separation of training and test set is ensured such that meaningful statements over the predictive power of the methods can be made.
+Following this hunch, a continued investigation of the data set is therefore pursued via principal component analysis.
+The results of the principal component analysis are given in \cref{fig:pca}. We can see that the linear PCA is already fairly successful at separating the data set. Note, that as PCA is an unsupervised method, it has not been given any labels. Labels are only plotted for clarity. In \cref{fig:pca1} one can see that just by projecting the data among axes of high variance, the two class labels are somewhat separated. \Cref{fig:pca2} shows that the projection vectors actually point along axes of high variance in the original space. Note, that the two vectors being shown here only \emph{seem} to note be orthogonal, due to the fact that a 2D slice of the 30 dimensional feature space is shown. Finally, \Cref{fig:pca3} shows that the first component of the PCA can almost explain \SI{5}{\percent} of the variance in the data, if the first 6 components are combined this rises to \SI{90}{\percent}. 
+The dimensions in \cref{fig:pca2} were chosen as the highest contributors to the first component of the PCA, which is why the also exhibit a high variance.
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{pca_1}
+        \caption{}
+        \label{fig:pca1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{pca_3}
+        \caption{}
+        \label{fig:pca2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.3\textwidth}
+        \includegraphics[width=\textwidth]{pca_2}
+        \caption{}
+        \label{fig:pca3}
+    \end{subfigure}
+    \caption{PCA of Data Set: (a) shows the two most important dimensions of the data set in the transformed space, (b) shows how the PCA projects along axes of maximal variance, the arrows indicate the direction of projection, (c) shows the explained variance of the original data set per PCA component.}\label{fig:pca}
+\end{figure}
+
+In conclusion, PCA can be successfully applied to this data set as a dimensionality reduction technique. The transformed, lower-dimensional data can then be used as an input to other classification algorithms. The success of the linear PCA also shows that the complexity of the data set is somewhat limited and that we can expect successful results from simple methods.
+
+\subsection{Classification Algorithms}
+\paragraph{Evaluation (JK).} In order to provide reliable performance analysis, 10-fold cross-validation as described in the lecture is employed for each algorithm. A strict separation of training and test set is ensured such that meaningful statements over the predictive power of the methods can be made.
 Whenever an algorithm has hyperparameters an exhaustive grid search is performed in order to find the best-performing set of parameters. \emph{Performance} is given in terms of precision-recall graphs. 
 
-% Validation data is only needed when we compare different models. The cross validation might just yield a "lucky" winner. (Using different models on the test set can be seen as overfitting the test set. The winning model might have just been lucky. 
+\paragraph{(k-)Nearest Neighbor (JK).} The cross-validated precision-recall results for the k-NN classifier can be seen in \cref{fig:knn1}. Most generally, the classifier achieves very good performance on the data set.
+As is usually expected, an initial increase in the $k$ numbers considered in the majority vote, increases the performance of classification, as this helps stabilize the prediction against outliers. However, when too many neighbors are considered, the predictive power of the classifier should decrease, since neighbors that are too far away, and are therefore likely to be of a different class, contribute to the majority vote. One can weigh the votes of each neighbor by the inverse of the distance from the instance to classify to somewhat remedy this problem.
+
+The best performance is achieved at $k=9$ with 
+\begin{align*}
+	\text{accuracy} &= 0.97 \pm 0.02 \\
+	\text{precision} &= 0.99 \pm 0.03 \\
+	\text{recall} &= 0.93 \pm 0.05 \, .
+\end{align*}
+
+In this data set, we notice that the precision value of the classifier increases by 4 percentage points as we go to a 2-NN classifier. However, afterwards the data set is almost indifferent to an increase in $k$.  The recall value does slightly increase, however not significantly w.\ r.\ t.\ its standard deviation. This stability hints at the fact that meaningful features exist, clustering the data in a stable manner and therefore an increase in $k$ does not decrease performance.\footnote{As $k$ is increased, eventually instances of the opposite class are considered in the majority vote. However, if the data is approximately spherically clustered, an increasing number of correct instances is also considered. Therefore meaningful features yield some stability against large values of $k$.}
+Only as we increase $k$ to large values of $k>50$ can a decrease in precision be observed, and finally the classifier breaks down at extreme and absolutely unreasonable $k$, i.e. the recall value increases because a lot of the positive instances are being falsely misclassified as negatives. The value drops below the orange guessing line, because the data set is imbalanced (more negative than positive instances) and at high $k$ this leads to a lot of false negatives, because the algorithm simply predicts the majority class. If the classification is redone with an artificially balanced data set the classification power stays above the worst case scenario of guessing even at high $k$.
+However, at reasonable $k$ the imbalance in the data set does not affect the performance of the k-NN classifier, which makes sense, because imbalance is a global quantity whereas the k-NN classifier only looks at local balls in feature space.
+\begin{figure}
+	\centering
+	 \begin{subfigure}[b]{0.45\textwidth}
+	 	\includegraphics[width=\textwidth]{knn}
+	 	\caption{}
+	 	\label{fig:knn1}
+    \end{subfigure}
+	 \begin{subfigure}[b]{0.45\textwidth}
+	 	\includegraphics[width=\textwidth]{knn_pca}
+	 	\caption{}
+	 	\label{fig:knn2}
+    \end{subfigure}
+	\caption{Precision-recall plot of the k-NN classifier for different values of k in the (a) original feature space and (b) the first four dimensions of the PCA. The grey line represents an ideal classifier, the orange line gives the performance for pure guessing, i.e. the worst case scenario.}
+	\label{fig:knn}
+\end{figure}
+
+The k-NN algorithm has also been applied to the first four components of the PCA, which explain about \SI{80}{\percent} of the variance of the original data. A few differences can be achieved. Firstly, the performance of the PCA k-NN stays slightly below the performance of the raw k-NN. This is relieving, as our data set does not contain a lot of instances ($\approx 600$) in a space of 30 dimensions. One could have thought, that the performance of the classifier in the original feature breaks down due to the \emph{curse of high dimensions}. Compare to \cite{barber2012brm, bishop2006prm} for a textbook discussion of the topic.
+Intuitively as the number of dimensions rises, the volume of a hypercube rises exponentially, and therefore an exponential number of points are needed to cover the space densely. This means that high-dimensional data can very easily get sparse. It also affects the Euclidean distance metric: at high dimensions, the distance from one point to all it's neighbors becomes very similar. Even though the space is sparsely populated, most of the points are concentrated at a similar distance. 
+This is why the raw k-NN precision recall curve seems to bunch together all $k\in {2,\dots, 20}$ while the PCA k-NN precision-recall curve is more spread out. In high dimensions, as we increase the number of neighbors taken into consideration, we do not actually venture further away from the point. Therefore, all of the points are bunched together, except for extreme values of $k$. The expected effect of increasing k (smooth curve with optimum at some $k$, and bad performance at extremal values) can only be observed for low dimensional data.
+There is some discussion in the literature to what extend the performance of k-NN and related algorithms is necessarily affected by dimensionality. However, this is beyond the scope of this report and the reader is referred to \cite{marimont1979nearest, Chavez01searchingin, paper3}.
 
 \section{Discussion}
 \label{sec:discu}
