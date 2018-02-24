@@ -10,10 +10,10 @@ introduction, theory of algorithms, data exploration, results of algorithms with
 ## Algorithms that we wanted to check out:
 
 - Baye's Classifier
-- LDA
-- QDA
-- (k-) nearest Neighbour
-- Logistic Regression
+- LDA (Neish)
+- QDA (Neish)
+- (k-) nearest Neighbour (Jannik)
+- <s>Logistic Regression</s> (is the same as QDA for binary classification problem) 
 - Histograms
 - Density Trees
 - SVM (linear and kernel)
