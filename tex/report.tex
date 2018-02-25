@@ -58,7 +58,7 @@
 %    \vspace*{0.5 cm}
     \includegraphics[scale = 0.6]{hdlogo}\\[2.0 cm]  % University Logo
      \begin{flushleft}
-     \large  \hspace{1cm} A report on 
+     \large  \hspace{1cm} A report on the 
 	\end{flushleft}      
      \centering
     \rule{\linewidth}{0.2 mm} \\[0.4 cm]
@@ -115,7 +115,7 @@
 \section{Introduction (JK)}
 The following pages contain the report on our final project for the \emph{Fundamentals of Machine Learning} lecture given by Dr.\ Köthe in the last semester. As the lecture focused on the \emph{fundamentals} of machine learning we see this project as an opportunity to explore and revise again some fundamental techniques of machine learning and also dive into some of the algorithms which, while they were presented in the lectures, were not discussed (enough) in the tutorials.  Often, the application potential of these basic techniques on real-world tasks is rather small. However, they do constitute the foundations of more recent and better algorithms, which often embed or build upon these methods. 
 The focus of this project shall therefore not be to \emph{solve} a task using fundamental machine learning, but rather to carefully study the different algorithms and compare their strengths and shortcomings in comparison with each other. To narrow the focus of the project a bit, we have chosen to only compare \emph{classification} methods.
-We work with the \emph{Breast Cancer Wisconsin (Diagnostic) Data Set} \cite{street1993nuclear}, a binary classification task with the aim to identify whether a person does or does not have breast cancer based on a set of hand-crafted features. The data set should work very well for benchmarking algorithms, providing a nice balance between being well-behaved, i.\ e.\solvable, and possessing enough depth and character to allow for some comparison between the algorithms, i.\ e.\not being trivial to solve.
+We work with the \emph{Breast Cancer Wisconsin (Diagnostic) Data Set} \cite{street1993nuclear}, a binary classification task with the aim to identify whether a person does or does not have breast cancer based on a set of hand-crafted features. The data set should work very well for benchmarking algorithms, providing a nice balance between being well-behaved, i.\ e.\ solvable, and possessing enough depth and character to allow for some comparison between the algorithms, i.\ e.\ not being trivial to solve.
 
 
 \paragraph{Data Set.} The abovementioned data set was first published alongside a paper called \emph{Nuclear Feature Extraction For Breast Cancer Diagnosis} \cite{street1993nuclear} in the 1993 edition of the \emph{International Symposium on Electronic Imaging: Science and Technology}, wherein a classification pipeline for breast cancer diagnosis is proposed. A small sample of skin tissue is extracted from the patients breast and analyzed using a camera mounted atop a microscope. Using an interactive tool the operator identifies individual cell nuclei, whose outlines are then semi-automatically determined. For each nucleus, ten features that are sought to describe the geometric shape and appearance of the nucleus are crafted. These features are the radius, perimeter, area, compactness, smoothness, concavity, concave points, symmetry, fractal dimension, and texture of the nucleus.
@@ -174,15 +174,15 @@ In mathematical terms, the decision function for the NN classifier can be writte
 	f_{\mathrm{NN}} = Y_i \, \text{,  where } \, i = \argmin_{i^\prime \in \mathrm{TS}} \: d(X_i, X_{i^\prime}) \, .
 \end{align*}
 The NN classifier requires the total memorization of the training set which becomes problematic for larger data sets.
-A simple variant of the NN classifier is the k-nearest neighbor algorithm, which classifies instances by taking a majority vote of the classes of the surrounding k-nearest neighbors of the instance that is to be classified. In contrast to the simple NN classifier, the k-NN classifier is consistent, i.\ e.\the k-NN classifier converges to the optimal Bayes classifier as $N\to\infty$.
+A simple variant of the NN classifier is the k-nearest neighbor algorithm, which classifies instances by taking a majority vote of the classes of the surrounding k-nearest neighbors of the instance that is to be classified. In contrast to the simple NN classifier, the k-NN classifier is consistent, i.\ e.\ the k-NN classifier converges to the optimal Bayes classifier as $N\to\infty$.
 
-\paragraph{Support Vector Machine (JK).} Out of all of the presented algorithms in the lecture, Support Vector Machines (SVMs) are among the most powerful and widely used. Similar to the previously presented linear discriminant analysis / logistic regression, in SVM decision planes are trained to discern between positive and negative instances of the data. When the data is linearly separable, i.\ e.\there are multiple hyperplanes that perfectly separate the different classes, SVM chooses that hyperplane which maximizes the so-called \emph{safety margin}
+\paragraph{Support Vector Machine (JK).} Out of all of the presented algorithms in the lecture, Support Vector Machines (SVMs) are among the most powerful and widely used. Similar to the previously presented linear discriminant analysis / logistic regression, in SVM decision planes are trained to discern between positive and negative instances of the data. When the data is linearly separable, i.\ e.\ there are multiple hyperplanes that perfectly separate the different classes, SVM chooses that hyperplane which maximizes the so-called \emph{safety margin}
 \begin{align}
 	&\max_{\beta, \beta_0} M \\
 	= &	\max_{\beta, \beta_0} \left\{ \min_i Y_i ( X_i \beta + \beta_0) \right\} \, .
 \end{align}
 $X_i \beta + \beta_0$ gives the signed distance of instance $X_i$ to the decision plane parametrized by $(\beta, \beta_0)$. $Y_i (X_i \beta + \beta_0)$ is always positive. 
-We therefore find the decision plane by maximizing the margin for the for the points closest to the decision plane. The obtained solution for an SVM depends entirely on those critical points, i.\ e.\the decision plane of an SVM is governed by the points close to the decision plane, completely unlike the abovementioned LDA, where the majority of the points, which are close to the mean and not the boundary, decides the position of the decision plane. 
+We therefore find the decision plane by maximizing the margin for the for the points closest to the decision plane. The obtained solution for an SVM depends entirely on those critical points, i.\ e.\ the decision plane of an SVM is governed by the points close to the decision plane, completely unlike the abovementioned LDA, where the majority of the points, which are close to the mean and not the boundary, decides the position of the decision plane. 
 Setting the arbitrary $M=1$ and rescaling by the norm of $\beta$ yields the optimization problem of the linear SVM for separable data
 \begin{align}
 	\hat{\beta}, \hat{\beta_0} = \argmin_{\beta, \beta_0}  \norm{ \beta}^2 
@@ -209,13 +209,36 @@ although other kernels such as polynomial or sigmoid kernels are also used.
 
 The SVM optimization problem can be solved iteratively using various gradient descent methods.%
 
+\paragraph{Multilayer Perceptron (JK).} Even though they were not part of the lecture, it seems wrong to not discuss neural networks at all. They have been hugely successful within the machine learning community, finding application in a broad variety of topics. While a lot of research is dedicated to \emph{convolutional neueral networks} in computer vision, simple neural networks can also be employed to do classification tasks.
+This is why, even though cutting-edge neural networks are not discussed here, the multilayer perceptron (MLP), basic artificial neural network archticture, is introduced and applied. A \emph{very} brief description is given in the following paragraph, for a more detailed description see e.\ g.\ \cite{bishop2006prm}.
+An MLP, as depicted in \cref{fig:mlp}, consists of several layers of neurons, where each layer consists of a column of neurons. Each neuron receives an input signal that is a weighted sum over all of the outputs of the neurons in the previous layer. A so-called bias is added to that sum and finally a non-linearity, such as a sigmoid function, is applied to give the output of a neuron. For a neuron $z_{1i} $ in the first hidden layer this would be
+\begin{align*}
+	o_{1i} = \text{sigmoid}\left( W_{1i} z_{0} + b_{1i} \right) \, ,
+\end{align*}
+where $W_{1i}$ are the weights connecting the inputs  $z_{0}$ to the neuron $i$ in the first hidden layer and $b_{1i}$ is the bias term. This operation is repeated all over the network. Any neural network therefore is a nested application of non-linear functions of the input data.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{mlp}
+	\caption{Schematic diagram of a MLP. Image Credit \citep{saracoglu2010color}}
+	\label{fig:mlp}
+\end{figure}
+
+For our binary classification problem, the output layer consists of two nodes, one for each of the classes. In training, the neural network is presented with examples from the training set and the output from the last layer is compared to the desired output. For binary classification problems, a binary cross entropy loss similar to LDA
+\begin{align}
+	\text{loss}(\{y_i, \hat{y_i}\}) = \frac{1}{N_b} \sum_{i=1}^{N_b} \left( y_i \log(\hat{y_i}) + (1-y_i)) \log(1-\hat{y_i}) \right)
+\end{align}
+is used. $N_b$ here is the batch size, which is not neccessarily equal to the number of instances $N$ in the data set. This loss can then be minimized in training, by means of \emph{backpropagation}: the partial derivatives of the loss with respect to the parameters are calculated and the parameters adjusted accordingly to minimize the loss.
+Through many iterations of this, the network can be fit to the data set, although one needs to be careful not to overfit to the data.
+Early stopping (stop the training process before convergence) and regularization techniques such as dropout (randomly drop a proportion of the neurons from the network)) may be used to combat overfitting.
+
 \section{Experiments \& Discussion}
 \label{sec:expe}
-In the following, the tools and implementations from the python library scikit-learn \cite{scikit-learn} are heavily used.
+In the following, the tools and implementations from the python library scikit-learn \cite{scikit-learn} are heavily used. For the multilayer perceptron, the popular library tensorflow \cite{tensorflow2015-whitepaper} is employed.
 
 \subsection{Exploratory Analysis \& Introduction to the Data Set (JK)}
 Before the introduced classification methods are applied, it is crucial that some time is spent on exploring the \emph{Breast Cancer Wisconsin Data Set}.
-The data set consists of $N=569$ instances with $D=30$ dimensions per instance. The data is somewhat imbalanced as \SI{63}{\percent} of the instances are false, i.\ e.\come from benign cells without breast cancer. This might have to be accounted for in the analysis.
+The data set consists of $N=569$ instances with $D=30$ dimensions per instance. The data is somewhat imbalanced as \SI{63}{\percent} of the instances are false, i.\ e.\ come from benign cells without breast cancer. This might have to be accounted for in the analysis.
 Data will be centered and standardized according to the training set distribution unless otherwise mentioned.
 To get a feeling for the data set, 16 random combinations of two dimensions of the data set are shown in a scatter plot in \cref{fig:random_scatter}. While for some features, the different classes are clumped together, we can already see that for others a separation might be possible.
 \begin{figure}
@@ -264,10 +287,10 @@ The best performance is achieved at $k=9$ with
 	\text{precision} &= 0.99 \pm 0.03 \\
 	\text{recall} &= 0.93 \pm 0.05 \, .
 \end{align*}
-However the high noise from the cross-validation makes it entirely possible that other $k$ might achieve better performance on a test set. However, their performance will most likely be very similar to the one achieved with $k=9$, i.\ e.\it does not really matter.
+However the high noise from the cross-validation makes it entirely possible that other $k$ might achieve better performance on a test set. However, their performance will most likely be very similar to the one achieved with $k=9$, i.\ e.\ it does not really matter.
 
 In this data set, we notice that the precision value of the classifier increases by 4 percentage points as we go to a 2-NN classifier. However, afterwards the data set is almost indifferent to an increase in $k$.  The recall value does slightly increase, however not significantly w.\ r.\ t.\ its standard deviation. This stability hints at the fact that meaningful features exist, clustering the data in a stable manner and therefore an increase in $k$ does not decrease performance.\footnote{As $k$ is increased, eventually instances of the opposite class are considered in the majority vote. However, if the data is approximately spherically clustered, an increasing number of correct instances is also considered. Therefore meaningful features yield some stability against large values of $k$.}
-Only as we increase $k$ to large values of $k>50$ can a decrease in precision be observed, and finally the classifier breaks down at extreme and absolutely unreasonable $k$, i.\ e.\the recall value increases because a lot of the positive instances are being falsely misclassified as negatives. The value drops below the orange guessing line, because the data set is imbalanced (more negative than positive instances) and at high $k$ this leads to a lot of false negatives, because the algorithm simply predicts the majority class. If the classification is redone with an artificially balanced data set the classification power stays above the worst case scenario of guessing even at high $k$.
+Only as we increase $k$ to large values of $k>50$ can a decrease in precision be observed, and finally the classifier breaks down at extreme and absolutely unreasonable $k$, i.\ e.\ the recall value increases because a lot of the positive instances are being falsely misclassified as negatives. The value drops below the orange guessing line, because the data set is imbalanced (more negative than positive instances) and at high $k$ this leads to a lot of false negatives, because the algorithm simply predicts the majority class. If the classification is redone with an artificially balanced data set the classification power stays above the worst case scenario of guessing even at high $k$.
 However, at reasonable $k$ the imbalance in the data set does not affect the performance of the k-NN classifier, which makes sense, because imbalance is a global quantity whereas the k-NN classifier only looks at local balls in feature space.
 \begin{figure}
 	\centering
@@ -281,7 +304,7 @@ However, at reasonable $k$ the imbalance in the data set does not affect the per
 	 	\caption{}
 	 	\label{fig:knn2}
     \end{subfigure}
-	\caption{Precision-recall plot of the k-NN classifier for different values of k in the (a) original feature space and (b) the first four dimensions of the PCA. The grey line represents an ideal classifier, the orange line gives the performance for pure guessing, i.\ e.\the worst case scenario.}
+	\caption{Precision-recall plot of the k-NN classifier for different values of k in the (a) original feature space and (b) the first four dimensions of the PCA. The grey line represents an ideal classifier, the orange line gives the performance for pure guessing, i.\ e.\ the worst case scenario.}
 	\label{fig:knn}
 \end{figure}
 
@@ -331,6 +354,16 @@ The best result, acknowledging that this is just a \emph{trend} and that the noi
 \end{align*}
 
 Again, the errors do not permit any detailed comparison between other algorithms, though it seems that the limited complexity of the data set is already well accounted for by a simple linear SVM. Note that for some extreme values not shown in the plot, e.\ g.\ low $C$ or high $\gamma$, the classification performance broke down completely.
+
+\paragraph{Multilayer Perceptron (JK).} Neural networks have many hyperparameters such as learning rate (how much do we adjust the parameters after each backpropagation), batch size (how many instances do we feed into the network before we backpropagate), epochs (how many times do we propagate all of the data through the network), as well as the general architecture of the network. Additionally, training large neural network is computationally expensive, which is why grid searches over the hyperparameterspace as well as cross-validation are rarely seen in current publications.\footnote{Plus, in this report, I see the MLP more as a pet project, a nice little extra, whose performance need not to be pushed to the maximum.}
+
+A simple MLP with \SI{30} input nodes, \SI{300} nodes in a single hidden layer, and \SI{2} output nodes was constructed. Training for \SI{200} epochs with \SI{50} instances per batch and a learning rate of \SI{0.05} yielded a test set performance of 
+\begin{align*}
+	\text{accuracy} &= 0.98 \\
+	\text{precision} &= 0.97  \\
+	\text{recall} &= 0.98  \, .
+\end{align*}
+However, due to the reasons mentioned above no cross validation was performed, and the values are therefore without error. Due to the stochastic nature of the batch training, the values vary slightly between different sessions. However, even though no hyperparameter optimization was performed, the test set classification performance of a simple MLP is fairly high and comparable the other presented algorithms.
 
 \section{Discussion}
 \label{sec:discu}
