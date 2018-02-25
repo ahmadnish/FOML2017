@@ -47,7 +47,7 @@
 % Define argmin, max
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\argmax}{arg\,max}
-
+\DeclarePairedDelimiter\norm{\lVert}{\rVert}
 
 \begin{document}
 
@@ -113,9 +113,10 @@
 %\end{figure}
 
 \section{Introduction (JK)}
-The following pages contain the report on our final project for the \emph{Fundamentals of Machine Learning} lecture given by Dr.\ Köthe in the last semester. As the lecture focused on the \emph{fundamentals} of machine learning we see this project as an opportunity to explore and revise again some fundamental techniques of machine learning. Often, the application potential of these techniques on real-world tasks is rather small. However, they do constitute the foundations of more recent and better algorithms, which often embed or build upon these basic methods. 
+The following pages contain the report on our final project for the \emph{Fundamentals of Machine Learning} lecture given by Dr.\ Köthe in the last semester. As the lecture focused on the \emph{fundamentals} of machine learning we see this project as an opportunity to explore and revise again some fundamental techniques of machine learning and also dive into some of the algorithms which, while they were presented in the lectures, were not discussed (enough) in the tutorials.  Often, the application potential of these basic techniques on real-world tasks is rather small. However, they do constitute the foundations of more recent and better algorithms, which often embed or build upon these methods. 
 The focus of this project shall therefore not be to \emph{solve} a task using fundamental machine learning, but rather to carefully study the different algorithms and compare their strengths and shortcomings in comparison with each other. To narrow the focus of the project a bit, we have chosen to only compare \emph{classification} methods.
-We work with the \emph{Breast Cancer Wisconsin (Diagnostic) Data Set} \cite{street1993nuclear}, a binary classification task with the aim to identify whether a person does or does not have breast cancer based on a set of hand-crafted features. The data set should work very well for benchmarking algorithms, providing a nice balance between being well-behaved, i.e. solvable, and possessing enough depth and character to allow for some comparison between the algorithms, i.e. not being trivial to solve.
+We work with the \emph{Breast Cancer Wisconsin (Diagnostic) Data Set} \cite{street1993nuclear}, a binary classification task with the aim to identify whether a person does or does not have breast cancer based on a set of hand-crafted features. The data set should work very well for benchmarking algorithms, providing a nice balance between being well-behaved, i.\ e.\solvable, and possessing enough depth and character to allow for some comparison between the algorithms, i.\ e.\not being trivial to solve.
+
 
 \paragraph{Data Set.} The abovementioned data set was first published alongside a paper called \emph{Nuclear Feature Extraction For Breast Cancer Diagnosis} \cite{street1993nuclear} in the 1993 edition of the \emph{International Symposium on Electronic Imaging: Science and Technology}, wherein a classification pipeline for breast cancer diagnosis is proposed. A small sample of skin tissue is extracted from the patients breast and analyzed using a camera mounted atop a microscope. Using an interactive tool the operator identifies individual cell nuclei, whose outlines are then semi-automatically determined. For each nucleus, ten features that are sought to describe the geometric shape and appearance of the nucleus are crafted. These features are the radius, perimeter, area, compactness, smoothness, concavity, concave points, symmetry, fractal dimension, and texture of the nucleus.
 For the sake of brevity, the reader is referred to the original publication \cite{street1993nuclear} for a detailed description of how these features are calculated from the image and outline of a nucleus. 
@@ -126,7 +127,7 @@ The hope here is obviously, that these features (or a subset thereof) capture th
 
 As demanded by the faculty of Mathematics and Computer Science, each section or paragraph heading also contains a shorthand symbol, \emph{(JK)} or \emph{(AN)}, to indicate whether a certain section was written by Jannik Kossen or Ahmad Neishabouri.
 
-\section{Theoretical Background}
+\section{Theoretical Background}	
 \label{sec:theo}
 
 \paragraph{Preliminary Remarks (JK).} Note that, unless marked otherwise, the theoretical derivation and description attempt to follow the notation of the lecture \cite{kothe2018foml} for clarity.
@@ -173,20 +174,55 @@ In mathematical terms, the decision function for the NN classifier can be writte
 	f_{\mathrm{NN}} = Y_i \, \text{,  where } \, i = \argmin_{i^\prime \in \mathrm{TS}} \: d(X_i, X_{i^\prime}) \, .
 \end{align*}
 The NN classifier requires the total memorization of the training set which becomes problematic for larger data sets.
-A simple variant of the NN classifier is the k-nearest neighbor algorithm, which classifies instances by taking a majority vote of the classes of the surrounding k-nearest neighbors of the instance that is to be classified. In contrast to the simple NN classifier, the k-NN classifier is consistent, i.e. the k-NN classifier converges to the optimal Bayes classifier as $N\to\infty$.
+A simple variant of the NN classifier is the k-nearest neighbor algorithm, which classifies instances by taking a majority vote of the classes of the surrounding k-nearest neighbors of the instance that is to be classified. In contrast to the simple NN classifier, the k-NN classifier is consistent, i.\ e.\the k-NN classifier converges to the optimal Bayes classifier as $N\to\infty$.
+
+\paragraph{Support Vector Machine (JK).} Out of all of the presented algorithms in the lecture, Support Vector Machines (SVMs) are among the most powerful and widely used. Similar to the previously presented linear discriminant analysis / logistic regression, in SVM decision planes are trained to discern between positive and negative instances of the data. When the data is linearly separable, i.\ e.\there are multiple hyperplanes that perfectly separate the different classes, SVM chooses that hyperplane which maximizes the so-called \emph{safety margin}
+\begin{align}
+	&\max_{\beta, \beta_0} M \\
+	= &	\max_{\beta, \beta_0} \left\{ \min_i Y_i ( X_i \beta + \beta_0) \right\} \, .
+\end{align}
+$X_i \beta + \beta_0$ gives the signed distance of instance $X_i$ to the decision plane parametrized by $(\beta, \beta_0)$. $Y_i (X_i \beta + \beta_0)$ is always positive. 
+We therefore find the decision plane by maximizing the margin for the for the points closest to the decision plane. The obtained solution for an SVM depends entirely on those critical points, i.\ e.\the decision plane of an SVM is governed by the points close to the decision plane, completely unlike the abovementioned LDA, where the majority of the points, which are close to the mean and not the boundary, decides the position of the decision plane. 
+Setting the arbitrary $M=1$ and rescaling by the norm of $\beta$ yields the optimization problem of the linear SVM for separable data
+\begin{align}
+	\hat{\beta}, \hat{\beta_0} = \argmin_{\beta, \beta_0}  \norm{ \beta}^2 
+	\quad \text{s.t.} \enspace \forall i: Y_i (X_i \beta + \beta_0 \ge 1) \, ,
+\end{align}
+where the constraint ensures that the decision line strictly separates data of the two classes.
+Since real world data are usually not linearly separable, so-called \emph{slack} variables $s_i$ are introduced that represent a trade-off between the maximization of the margin and minimizing the loss over the training instances. 
+By rearranging the constraint the linear SVM can be rewritten as
+\begin{align}
+	\hat{\beta}, \hat{\beta_0} = \argmin_{\beta, \beta_0} \frac{1}{2} \norm{ \beta }^2 + \frac{C}{N} \sum_i \text{loss} (X_i, Y_i | \beta, \beta_0) \, ,
+\end{align}
+where $C$ now represents the trade-off parameter between the two objectives. $C$ can be found using cross-validation. In SVM we also get to chose a loss term, where a popular choice is the \emph{hinge loss}
+\begin{align}
+	\text{Hinge Loss}(\hat{Y}_i, Y_i) =  \max(0, 1-\hat{Y}_i  Y_i) \, .
+\end{align}
+However, other types of losses are possible, with most popular choices producing similar outcomes, seeing as a lot of them behave similarly near the decision boundary.
+From the above expression, a dual formulation can be obtained which is suited for a kernelized version of the SVM, which is not derived here.
+Suffice to say, that to get to a kernel SVM, the above optimization problem has to be reformulated such that the data is only accessed via scalar products $X_i^T X_i^\prime$ which are then replaced by a kernel $K(X_i, X_i^\prime)$. This introduces a non-linearity that effectively maps the data to a higher dimensional space and allows one to solve more complex problems at the cost of introducing additional hyperparameters.
+A popular kernel choice is the Gaussian kernel
+\begin{align}
+	K(X_i, X_i^\prime) = e^{-\gamma \norm{ X_i - X_i^\prime }^2} \, 
+\end{align}
+although other kernels such as polynomial or sigmoid kernels are also used.
+
+The SVM optimization problem can be solved iteratively using various gradient descent methods.%
 
 \section{Experiments \& Discussion}
 \label{sec:expe}
+In the following, the tools and implementations from the python library scikit-learn \cite{scikit-learn} are heavily used.
 
 \subsection{Exploratory Analysis \& Introduction to the Data Set (JK)}
 Before the introduced classification methods are applied, it is crucial that some time is spent on exploring the \emph{Breast Cancer Wisconsin Data Set}.
-The data set consists of $N=569$ instances with $D=30$ dimensions per instance. The data is somewhat imbalanced as \SI{63}{\percent} of the instances are false, i.e. come from benign cells without breast cancer. This might have to be accounted for in the analysis.
+The data set consists of $N=569$ instances with $D=30$ dimensions per instance. The data is somewhat imbalanced as \SI{63}{\percent} of the instances are false, i.\ e.\come from benign cells without breast cancer. This might have to be accounted for in the analysis.
 Data will be centered and standardized according to the training set distribution unless otherwise mentioned.
 To get a feeling for the data set, 16 random combinations of two dimensions of the data set are shown in a scatter plot in \cref{fig:random_scatter}. While for some features, the different classes are clumped together, we can already see that for others a separation might be possible.
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{random_scatter}
 	\caption{Shown are random 2D slices of the data set. Given in parenthesis are the dimensions that give the $(x,y)$ axis of the plot.}
+	\label{fig:random_scatter}
 \end{figure}
 
 Following this hunch, a continued investigation of the data set is therefore pursued via principal component analysis.
@@ -228,9 +264,10 @@ The best performance is achieved at $k=9$ with
 	\text{precision} &= 0.99 \pm 0.03 \\
 	\text{recall} &= 0.93 \pm 0.05 \, .
 \end{align*}
+However the high noise from the cross-validation makes it entirely possible that other $k$ might achieve better performance on a test set. However, their performance will most likely be very similar to the one achieved with $k=9$, i.\ e.\it does not really matter.
 
 In this data set, we notice that the precision value of the classifier increases by 4 percentage points as we go to a 2-NN classifier. However, afterwards the data set is almost indifferent to an increase in $k$.  The recall value does slightly increase, however not significantly w.\ r.\ t.\ its standard deviation. This stability hints at the fact that meaningful features exist, clustering the data in a stable manner and therefore an increase in $k$ does not decrease performance.\footnote{As $k$ is increased, eventually instances of the opposite class are considered in the majority vote. However, if the data is approximately spherically clustered, an increasing number of correct instances is also considered. Therefore meaningful features yield some stability against large values of $k$.}
-Only as we increase $k$ to large values of $k>50$ can a decrease in precision be observed, and finally the classifier breaks down at extreme and absolutely unreasonable $k$, i.e. the recall value increases because a lot of the positive instances are being falsely misclassified as negatives. The value drops below the orange guessing line, because the data set is imbalanced (more negative than positive instances) and at high $k$ this leads to a lot of false negatives, because the algorithm simply predicts the majority class. If the classification is redone with an artificially balanced data set the classification power stays above the worst case scenario of guessing even at high $k$.
+Only as we increase $k$ to large values of $k>50$ can a decrease in precision be observed, and finally the classifier breaks down at extreme and absolutely unreasonable $k$, i.\ e.\the recall value increases because a lot of the positive instances are being falsely misclassified as negatives. The value drops below the orange guessing line, because the data set is imbalanced (more negative than positive instances) and at high $k$ this leads to a lot of false negatives, because the algorithm simply predicts the majority class. If the classification is redone with an artificially balanced data set the classification power stays above the worst case scenario of guessing even at high $k$.
 However, at reasonable $k$ the imbalance in the data set does not affect the performance of the k-NN classifier, which makes sense, because imbalance is a global quantity whereas the k-NN classifier only looks at local balls in feature space.
 \begin{figure}
 	\centering
@@ -244,22 +281,68 @@ However, at reasonable $k$ the imbalance in the data set does not affect the per
 	 	\caption{}
 	 	\label{fig:knn2}
     \end{subfigure}
-	\caption{Precision-recall plot of the k-NN classifier for different values of k in the (a) original feature space and (b) the first four dimensions of the PCA. The grey line represents an ideal classifier, the orange line gives the performance for pure guessing, i.e. the worst case scenario.}
+	\caption{Precision-recall plot of the k-NN classifier for different values of k in the (a) original feature space and (b) the first four dimensions of the PCA. The grey line represents an ideal classifier, the orange line gives the performance for pure guessing, i.\ e.\the worst case scenario.}
 	\label{fig:knn}
 \end{figure}
 
 The k-NN algorithm has also been applied to the first four components of the PCA, which explain about \SI{80}{\percent} of the variance of the original data. A few differences can be achieved. Firstly, the performance of the PCA k-NN stays slightly below the performance of the raw k-NN. This is relieving, as our data set does not contain a lot of instances ($\approx 600$) in a space of 30 dimensions. One could have thought, that the performance of the classifier in the original feature breaks down due to the \emph{curse of high dimensions}. Compare to \cite{barber2012brm, bishop2006prm} for a textbook discussion of the topic.
-Intuitively as the number of dimensions rises, the volume of a hypercube rises exponentially, and therefore an exponential number of points are needed to cover the space densely. This means that high-dimensional data can very easily get sparse. It also affects the Euclidean distance metric: at high dimensions, the distance from one point to all it's neighbors becomes very similar. Even though the space is sparsely populated, most of the points are concentrated at a similar distance. 
+Intuitively as the number of dimensions rises, the volume of a hypercube rises exponentially and therefore an exponential number of points are needed to cover the space densely. This means that high-dimensional data can very easily get sparse. It also affects the Euclidean distance metric: at high dimensions, the distance from one point to all it's neighbors becomes very similar. Even though the space is sparsely populated, most of the points are concentrated at a similar distance. 
 This is why the raw k-NN precision recall curve seems to bunch together all $k\in {2,\dots, 20}$ while the PCA k-NN precision-recall curve is more spread out. In high dimensions, as we increase the number of neighbors taken into consideration, we do not actually venture further away from the point. Therefore, all of the points are bunched together, except for extreme values of $k$. The expected effect of increasing k (smooth curve with optimum at some $k$, and bad performance at extremal values) can only be observed for low dimensional data.
 There is some discussion in the literature to what extend the performance of k-NN and related algorithms is necessarily affected by dimensionality. However, this is beyond the scope of this report and the reader is referred to \cite{marimont1979nearest, Chavez01searchingin, paper3}.
+
+\paragraph{Support Vector Machines (JK).} The SVM was successfully applied to the data set. The results of the linear SVM can be taken from \cref{fig:svm1}. Compared to the nearest neighbor algorithm, the linear SVM shows an interesting behaviour as the trade-off parameter $C$ is increased. As $C$ is increased from small values, both precision and recall increase somewhat linearly until an optimal value is reached, from which the classifier then decays in a similar way as $C$ is increased further.
+
+The optimal value of
+\begin{align*}
+	\text{accuracy} &= 0.98 \pm 0.01 \\
+	\text{precision} &= 0.99 \pm 0.01 \\
+	\text{recall} &= 0.96 \pm 0.03 \
+\end{align*}
+is reached at $C = 0.04$. As discussed in \cref{sec:theo}, low $C$ values express a preference of maximizing the margin and allowing misclassification in the training set. However, this shall not be overinterpreted as the results for higher $C$ values yield similar performance when accounting for uncertainty in the plots.
+
+While at first glance the performance of this classification are better than the classification obtained by simpler classification algorithms, such as the nearest neighbor algorithm, it has to be noted, that the noise in the results does not allow such conclusions. It seems that in our comparison between the algorithms we are fundamentally limited by the noise in our data set. While an increase the samples size might help here, it could be that the noise is simply inherent to the data set.
+
+\begin{figure}
+	\centering
+	 \begin{subfigure}[b]{0.45\textwidth}
+	 	\includegraphics[width=\textwidth]{svm}
+	 	\caption{}
+	 	\label{fig:svm1}
+    \end{subfigure}
+	 \begin{subfigure}[b]{0.45\textwidth}
+	 	\includegraphics[width=\textwidth]{svm_grid}
+	 	\caption{}
+	 	\label{fig:svm2}
+    \end{subfigure}
+	\caption{Precision-recall plot of the SVM classifier for different values of (a) the trade-off parameter $C$ for a linear SVM and (b) a grid of values $C$ and $\gamma$ for a kernelized SVM with a Gaussian kernel.}
+	\label{fig:svm}
+\end{figure}
+
+Again, the artificially balanced data set did not result in better classifier performance. Although SVMs can suffer from undesired results when the data is imbalanced, this does not occur here in any way noticeable.
+A kernel SVM with a Gaussian kernel was also applied and a grid search performed over possible combinations of $C$ and the kernel parameter $\gamma$.
+The resulting cross-validated precision recall curve of this grid search can be seen in \cref{fig:svm2}.
+There is no consistently apparent behavior of the precision-recall curve as either $C$ or $\gamma$ are varied. This is likely due to the fact that, limited by the computational complexity, the grid search only searches through orders of magnitudes for the desired parameters. A second round of grid search could have been performed after the first one, if the uncertainty in the data set were lower.
+
+The best result, acknowledging that this is just a \emph{trend} and that the noise in the cross-validation is too high, was achieved at $(C=10^3, \gamma=10^{-4})$ with
+\begin{align*}
+	\text{accuracy} &= 0.98 \pm 0.02 \\
+	\text{precision} &= 0.96 \pm 0.03 \\
+	\text{recall} &= 0.98 \pm 0.02 \, .
+\end{align*}
+
+Again, the errors do not permit any detailed comparison between other algorithms, though it seems that the limited complexity of the data set is already well accounted for by a simple linear SVM. Note that for some extreme values not shown in the plot, e.\ g.\ low $C$ or high $\gamma$, the classification performance broke down completely.
 
 \section{Discussion}
 \label{sec:discu}
 
 %TODO unfortunately original images are not available. otherwise could have trained CNN to do it all automatically just like thorsten did in his paper
+%TODO essentially not comparable with the high noise present
+%TODO read up, there was some way to make cross validation less noisy, that we could have used
 
 
 \section{Summary}
+
+%TODO most / all? our algorithms reached performance atleast par with what original authors published
 
 \section{Appendix}
 
