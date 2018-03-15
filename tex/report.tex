@@ -136,6 +136,14 @@ As demanded by the faculty of Mathematics and Computer Science, each section or 
 \paragraph{Preliminary Remarks (JK).} Note that, unless marked otherwise, for clarity, the theoretical derivations follow the lecture \cite{kothe2018foml} in content and notation.
 This includes the convention to describe the data as $X = ( X_1, X_2, \dots, X_N)$, where $N$ is the number of instances and each $X_i$ is a $D$-dimensional feature (row) vector. The feature $j$ of instance $i$ is therefore given by $X_{ij}$.  Index $i$ is solely used to index along the $N$-dimensional instance axis, whereas $j$ solely indexes the $D$-dimensional feature axis. The labels or ground truth instances of supervised learning are given as $Y_i$.
 
+
+\paragraph{Logistic Regression (AN). }  Against what the name may imply, logistic regression is a model used for classification problems, in which it models the probability that the response belongs to a particular category. Applying simple linear regression model to guess such probabilities may lead to probabilities outside 0 and 1 interval, which makes it hard to interpret as probabilities.
+To avoid such a problems, probabilities should be calculated using functions that result in a [0, 1] interval. For logistic regression, logisitic sigmoid functions is used in lecture notes:
+\begin{align}
+	\sigma(t) = \frac{1}{1 + \exp(-t)}
+\end{align}
+The distinct property of such a function is that it outputs result exactly between 0 and 1, as we asked for
+
 \paragraph{Principal Component Analysis (JK).} Principal Component Analysis (PCA) is a simple yet effective dimension reduction technique. Often, it is also used exploratively to gain an understanding of the complexity of a data set. In PCA, one aims to map instances $X_i$ of the original feature space $\mathbb{R}^D$ to features $Z_i$ in a lower-dimensional feature space $\mathbb{R}^{D^\prime}$ via a linear mapping
 \begin{align}
 	Z_i = X_i A + b \, 
