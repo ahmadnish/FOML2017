@@ -138,11 +138,12 @@ This includes the convention to describe the data as $X = ( X_1, X_2, \dots, X_N
 
 
 \paragraph{Logistic Regression (AN). }  Against what the name may imply, logistic regression is a model used for classification problems, in which it models the probability that the response belongs to a particular category. Applying simple linear regression model to guess such probabilities may lead to probabilities outside 0 and 1 interval, which makes it hard to interpret as probabilities.
-To avoid such a problems, probabilities should be calculated using functions that result in a [0, 1] interval. For logistic regression, logisitic sigmoid functions is used in lecture notes:
+To avoid such problems, probabilities should be calculated using functions that result in a [0, 1] interval. For logistic regression, logisitic sigmoid functions is used in lecture notes:
 \begin{align}
 	\sigma(t) = \frac{1}{1 + \exp(-t)}
 \end{align}
-The distinct property of such a function is that it outputs result exactly between 0 and 1, as we asked for
+
+The distinct property of the sigmoid function, which is also known as \emph{squashing function}, is that it maps the whole real line result to a 0 and 1 range, as we asked for. By implementing the above model in a Maximum Likelihood method, we'll be able to fit the model.
 
 \paragraph{Principal Component Analysis (JK).} Principal Component Analysis (PCA) is a simple yet effective dimension reduction technique. Often, it is also used exploratively to gain an understanding of the complexity of a data set. In PCA, one aims to map instances $X_i$ of the original feature space $\mathbb{R}^D$ to features $Z_i$ in a lower-dimensional feature space $\mathbb{R}^{D^\prime}$ via a linear mapping
 \begin{align}
@@ -176,7 +177,7 @@ $V^T$ is an eigenvector of S. Substituting this into the above problem simply yi
 The projection problem therefore has been reduced to finding the biggest eigenvector of S. In other words: if we want to linearly project our data into a one-dimensional feature space while retaining maximal information, we project along the direction of $V$, the vector belonging to the biggest eigenvalue $\lambda$ of the scatter matrix. Similarly, if we want to transform to a $D^\prime$ dimensional feature space, we project the original data instances along the $D^\prime$ largest eigenvectors $V_j$. Given by the optimization constraint above, the features (eigenvectors) of the new space are orthogonal. 
 
 It can be shown that the projection vectors $V_j$, sorted by their eigenvalue size, project the data along those orthogonal axes that lie along the direction of maximal variance in the original space $\mathbb{R}^D$. This is because axes with a high variance contain a lot of information and therefore minimize said information loss when transforming to the new, lower-dimensional feature space.
-
+\paragraph{Linear Discriminant Analysis (AN).} Another method commonly used for dimensionality reduction is Linear Discrminant Analysis(LDA), however, in contrast to previously described method of PCA, LDA is \emph{supervised} and which tries to find the axes direction with maximum between classes separation. 
 \paragraph{(k-)Nearest Neighbor Classification (JK).} One of the simplest approaches to classification is the the nearest neighbor (NN) classifier. Test set instances $i$ are simply classified with the same class as their \emph{nearest} neighbor from the training set (TS). 
 Which neighbor is \emph{nearest},  is given by some distance metric $d(X_i, X_{i^\prime})$ between to instances $X_i$ and $X_{i^\prime}$. $d(X_i, X_{i^\prime})$ is often chosen to simply be the Euclidean distance.
 In mathematical terms, the decision function for the NN classifier can be written as
