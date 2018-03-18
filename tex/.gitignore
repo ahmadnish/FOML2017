@@ -6,3 +6,6 @@
 *.gz
 *.toc
 *.pdf
+*.dvi
+*.DS_Store
+.DS_Store

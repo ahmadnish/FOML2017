@@ -145,7 +145,7 @@ To avoid such problems, probabilities should be calculated using functions that 
 
 The distinct property of the sigmoid function, which is also known as \emph{squashing function}, is that it maps the whole real line result to a 0 and 1 range, as we asked for. By implementing the above model in a Maximum Likelihood method, we'll be able to fit the model.
 
-\paragraph{Principal Component Analysis (JK).} Principal Component Analysis (PCA) is a simple yet effective dimension reduction technique. Often, it is also used exploratively to gain an understanding of the complexity of a data set. In PCA, one aims to map instances $X_i$ of the original feature space $\mathbb{R}^D$ to features $Z_i$ in a lower-dimensional feature space $\mathbb{R}^{D^\prime}$ via a linear mapping
+\paragraph{Principal Component Analysis (LDA) (JK).} Principal Component Analysis (PCA) is a simple yet effective dimension reduction technique. Often, it is also used exploratively to gain an understanding of the complexity of a data set. In PCA, one aims to map instances $X_i$ of the original feature space $\mathbb{R}^D$ to features $Z_i$ in a lower-dimensional feature space $\mathbb{R}^{D^\prime}$ via a linear mapping
 \begin{align}
 	Z_i = X_i A + b \, 
 \end{align}
@@ -186,6 +186,30 @@ It can be shown that the projection vectors $V_j$, sorted by their eigenvalue si
 	\label{fig:LDAvsPCA}
 \end{figure}
 
+However, we are using LDA here as a classification method, in which we are trying to best separate classes from each other. Comparing LDA to Logistic Regression, Logisitc regression tries to directly model $Pr(Y = y | X = x)$ using logistic function(Discriminative Model), while one can first model the distribution of the predictor X, separately in each of the response classes Y, and then using Bayes' theorem to estimate  $Pr(Y = y | X = x)$ (Generative Model). While there is high similarity between the Logistic Regression Model and LDA models for normal distributed instances, one aim to perform an LDA for the following reasons\cite{James:2014:ISL:2517747}
+
+\begin{description}
+  \item[$\bullet$] Well separated classes result in an unstable parameter estimation in Logistic Regression
+  \item[$\bullet$] LDA is more stable when the number of instances are small and the distribution of $X$ is normal.
+  \item[$\bullet$] LDA is highly popular when we are dealing with more than two response classes.
+\end{description}
+
+While in this project only the second reason might motivate us, however we did apply an LDA classification to compare with other methods. Linear Discrminant Analysis is derived as explained above, by first assuming a multivariate Gaussian distribution with a class specific mean vector and with constant covariant matrix for all classes. This means that we are assuming that all the clusters have the same elliptic shape and size. By maximising the likelihood of the training set(details in lecture notes \citep{kothe2018foml}), we would result to the following classifier:
+
+\begin{align}
+	\hat{k} = \argmax_{k}W^{T}_{k} . x + b^\prime_{k}
+\end{align}
+
+in which:
+
+\begin{align}
+	W^{T}_{k} = 2 \mu^{T}_{k}\Sigma^{-1}
+\end{align}
+
+is derived by fitting a Gaussian distribution to within class covariance.
+
+\paragraph{Quadratic Discriminant Analysis  (AN).} Qudratic Discriminant Analysis (QDA) follows the same step as in LDA, in which it results from assuming that all observation drawn from a Gaussian distribution, and using the Bayes' theorem to estimate the parameters to perform prediction. However, in contrast to LDA in which assumes a constant covariance matrix to each class, QDA assumes that each class has a different covariant matrix. This would result in a more complex model, thus more parameters to be calculated. Plus LDA is much less flexible than QDA which would result in less variance. However, the trade-off is when the K classes are actually does not share a common covariance matrix, which then would result in a high bias. Therefore, LDA would be better choice than if the training set is small and reducing variance is crucial. 
+
 
 \paragraph{(k-)Nearest Neighbor Classification (JK).} One of the simplest approaches to classification is the the nearest neighbor (NN) classifier. Test set instances $i$ are simply classified with the same class as their \emph{nearest} neighbor from the training set (TS). 
 Which neighbor is \emph{nearest},  is given by some distance metric $d(X_i, X_{i^\prime})$ between to instances $X_i$ and $X_{i^\prime}$. $d(X_i, X_{i^\prime})$ is often chosen to simply be the Euclidean distance.
@@ -212,7 +236,8 @@ where the constraint ensures that the plane strictly separates data of the two c
 Since real world data are usually not linearly separable, so-called \emph{slack} variables $s_i$ are introduced that represent a trade-off between the maximization of the margin and minimizing the loss over the training instances. 
 By rearranging the constraint the linear SVM can be rewritten as
 \begin{align}
-	\hat{\beta}, \hat{\beta_0} = \argmin_{\beta, \beta_0} \,  \frac{1}{2} \, \norm{ \beta }^2 + \frac{C}{N}\, \sum_i \text{loss} (X_i, Y_i | \beta, \beta_0) \, ,
+	\hat{\beta}, \hat{\beta_0} = \
+	min_{\beta, \beta_0} \,  \frac{1}{2} \, \norm{ \beta }^2 + \frac{C}{N}\, \sum_i \text{loss} (X_i, Y_i | \beta, \beta_0) \, ,
 \end{align}
 where $C$ now represents the trade-off parameter between the two objectives. Ideal $C$ can be found using cross-validation. In SVM we also get to chose a loss term, a popular choice being the \emph{hinge loss}
 \begin{align}
