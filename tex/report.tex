@@ -177,7 +177,16 @@ $V^T$ is an eigenvector of S. Substituting this into the above problem simply yi
 The projection problem therefore has been reduced to finding the biggest eigenvector of S. In other words: if we want to linearly project our data into a one-dimensional feature space while retaining maximal information, we project along the direction of $V$, the vector belonging to the biggest eigenvalue $\lambda$ of the scatter matrix. Similarly, if we want to transform to a $D^\prime$ dimensional feature space, we project the original data instances along the $D^\prime$ largest eigenvectors $V_j$. Given by the optimization constraint above, the features (eigenvectors) of the new space are orthogonal. 
 
 It can be shown that the projection vectors $V_j$, sorted by their eigenvalue size, project the data along those orthogonal axes that lie along the direction of maximal variance in the original space $\mathbb{R}^D$. This is because axes with a high variance contain a lot of information and therefore minimize said information loss when transforming to the new, lower-dimensional feature space.
-\paragraph{Linear Discriminant Analysis (AN).} Another method commonly used for dimensionality reduction is Linear Discrminant Analysis(LDA), however, in contrast to previously described method of PCA, LDA is \emph{supervised} and which tries to find the axes direction with maximum between classes separation. 
+\paragraph{Linear Discriminant Analysis (AN).} Another method commonly used for dimensionality reduction is Linear Discrminant Analysis(LDA), however, in contrast to previously described method of PCA, LDA is \emph{supervised} and which tries to find the axes direction with maximum between classes separation.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.7\textwidth]{LDAvsPCA}
+	\caption{LDA vs PCA. Image Credit \citep{raschka2014linear}}
+	\label{fig:LDAvsPCA}
+\end{figure}
+
+
 \paragraph{(k-)Nearest Neighbor Classification (JK).} One of the simplest approaches to classification is the the nearest neighbor (NN) classifier. Test set instances $i$ are simply classified with the same class as their \emph{nearest} neighbor from the training set (TS). 
 Which neighbor is \emph{nearest},  is given by some distance metric $d(X_i, X_{i^\prime})$ between to instances $X_i$ and $X_{i^\prime}$. $d(X_i, X_{i^\prime})$ is often chosen to simply be the Euclidean distance.
 In mathematical terms, the decision function for the NN classifier can be written as
