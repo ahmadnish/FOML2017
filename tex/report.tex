@@ -295,6 +295,7 @@ Before the introduced classification methods are applied, it is crucial that som
 The data set consists of $N=569$ instances with $D=30$ feature dimensions. The data are somewhat imbalanced as \SI{63}{\percent} of the instances are false, i.e.\  come from benign cells without breast cancer. This might have to be accounted for in the analysis.
 Data will be centered and standardized according to the training set distribution unless otherwise mentioned.
 To get a feeling for the data, 16 random combinations of two dimensions of the data set are shown in a scatter plot in \cref{fig:random_scatter}. While for some features, the different classes are clumped together, we can already see that for others, a separation and therefore successful classification might be possible.
+
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{random_scatter}
@@ -331,6 +332,33 @@ In conclusion, PCA can be successfully applied to this data set as a dimensional
 \subsection{Classification Algorithms}
 \paragraph{Evaluation (JK).} In order to provide reliable performance analysis, 10-fold cross-validation is employed for each algorithm. A strict separation of training and test set is ensured such that meaningful statements over the predictive power of the methods can be made.
 Whenever an algorithm has hyperparameters an exhaustive grid search is performed in order to find the best-performing set of parameters. \emph{Performance} is given in terms of accuracy and or precision-recall curves. 
+
+\paragraph{Logistic Regression (AN)} In Logistic Regression, the trade-off parameter for assigning the strength of regularization is tuned by changing the C parameter, in which higher values of C correspond to less regularization. This parameter works in a way that penalizes large weights which will result in reducing the flexibility of fitting the training data, and hence having better performance on test data.
+
+We started by implementing the logistic regression classifier on the data set for different C parameters trying to find the best value for this parameter. \cref{fig:logistic_regression} shows the precision-recall plot for the test set. 
+
+
+\begin{figure}
+    \centering
+    \begin{subfigure}[H]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{logistic_regression}
+        \caption{}
+        \label{fig:logistic_regression}
+    \end{subfigure}
+    \begin{subfigure}[H]{0.45\textwidth}
+        \includegraphics[width=\textwidth]{lr_test_train_plot}
+        \caption{}
+        \label{fig:lr_test_train_plot}
+    \end{subfigure}
+    \caption{Logistic Regression classifier output with different regularization parameter C, (a) precision-recall plot (b) Trade-off of model flexibility against training and test accuracy}\label{fig:LR}
+\end{figure}
+
+
+As \cref{fig:logistic_regression} shows, best precision-recall values are achieved with C = 0.1 and it's clear that the test precision is experiencing a peak on this value of regularization, a fact clearly shown on the train-test accuracy plot showing the bias-variance trade off point of C = 0.1 and the default C equal to 1 is underfitting. 
+
+
+
+%TODO You may add the plot for coefficient's learned with different L1 and L2 penalty adapted from 
 
 \paragraph{(k-)Nearest Neighbor (JK).} The cross-validated precision-recall results for the k-NN classifier can be seen in \cref{fig:knn1}. Most generally, the classifier achieves very good performance on the data set.
 As is usually expected, an initial increase in the $k$ number of neighbors considered in the majority vote increases the performance of classification as this helps stabilize the prediction against outliers. However, when too many neighbors are considered, the predictive power of the classifier should decrease, since neighbors that are too far away, and are therefore likely to be of a different class, contribute to the majority vote. One can weigh the votes of each neighbor by the inverse of the distance from the instance to classify to somewhat remedy this problem.
