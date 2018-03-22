@@ -208,8 +208,15 @@ in which:
 
 is derived by fitting a Gaussian distribution to within class covariance.
 
-\paragraph{Quadratic Discriminant Analysis  (AN).} Qudratic Discriminant Analysis (QDA) follows the same step as in LDA, in which it results from assuming that all observation drawn from a Gaussian distribution, and using the Bayes' theorem to estimate the parameters to perform prediction. However, in contrast to LDA in which assumes a constant covariance matrix to each class, QDA assumes that each class has a different covariant matrix. This would result in a more complex model, thus more parameters to be calculated. Plus LDA is much less flexible than QDA which would result in less variance. However, the trade-off is when the K classes are actually does not share a common covariance matrix, which then would result in a high bias. Therefore, LDA would be better choice than if the training set is small and reducing variance is crucial. 
+\paragraph{Quadratic Discriminant Analysis  (AN).} Qudratic Discriminant Analysis (QDA) follows the same steps as in LDA, in which it results from assuming that all observation are drawn from a Gaussian distribution, and using the Bayes' theorem to estimate the parameters to perform prediction. However, in contrast to LDA in which places a constant covariance matrix to each class, QDA assumes that each class has a different covariant matrix. This would result in a more complex model, thus in more parameters to be estimated. in addition, LDA is much less flexible than QDA which would result in less variance. However, the trade-off is when the K classes are actually does not share a common covariance matrix, which then would result in a high bias. Therefore, LDA would be better choice than QDA if the training set is small and reducing variance is crucial. 
 
+By maximising the likelihood of the training set, and assigning a separate covariance matrix for each class, we would result in
+
+\begin{align}
+	\hat{k} = \argmin_{k}(x - \mu_{k})^{T}\Sigma^{-1}_{k}(x - \mu_{k}) + b_{k},
+\end{align}
+
+which is a \emph{quadratic} function of $x$. 
 
 \paragraph{(k-)Nearest Neighbor Classification (JK).} One of the simplest approaches to classification is the the nearest neighbor (NN) classifier. Test set instances $i$ are simply classified with the same class as their \emph{nearest} neighbor from the training set (TS). 
 Which neighbor is \emph{nearest},  is given by some distance metric $d(X_i, X_{i^\prime})$ between to instances $X_i$ and $X_{i^\prime}$. $d(X_i, X_{i^\prime})$ is often chosen to simply be the Euclidean distance.
