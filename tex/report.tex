@@ -346,14 +346,14 @@ Whenever an algorithm has hyperparameters an exhaustive grid search is performed
 We started by implementing the logistic regression classifier on the data set for different C parameters trying to find the best value for this parameter. \cref{fig:logistic_regression} shows the precision-recall plot for the test set. 
 
 
-\begin{figure}
+\begin{figure}[h]
     \centering
-    \begin{subfigure}[H]{0.45\textwidth}
+    \begin{subfigure}{0.45\textwidth}
         \includegraphics[width=\textwidth]{logistic_regression}
         \caption{}
         \label{fig:logistic_regression}
     \end{subfigure}
-    \begin{subfigure}[H]{0.45\textwidth}
+    \begin{subfigure}{0.45\textwidth}
         \includegraphics[width=\textwidth]{tradeoff_lr}
         \caption{}
         \label{fig:tradeoff_lr}
@@ -367,6 +367,62 @@ As \cref{fig:logistic_regression} shows, best precision-recall values are achiev
 
 
 %TODO You may add the plot for coefficient's learned with different L1 and L2 penalty adapted from 
+
+\paragraph{Decision Trees (AN).} Of cardinal advantages of Decision trees is the ability of clearly showing and explaining the process of classification or regression even to non expert people, especially the one with low depth trees. \cref{fig:graphviz} shows such a representation for a tree made with depth of 3. 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=\textwidth]{graphviz}
+	\caption{Representation of the decision tree built on the dataset}
+	\label{fig:graphviz}
+\end{figure}
+
+As \cref{fig:graphviz} is limited to the certain depth of 3, bigger and more deep trees can be really over whelming and hard to grasp. So it's always better to display the trees after doing some pruning or pre-pruning. In this task in order to control the model complexity and preventing it from overfitting, we have applied a pre-pruning by changing both \emph{$max\_depth$} parameter and \emph{$max\_leaf\_nodes$} parameter and the results are presented in \cref{fig:DT_maxdepth} and \cref{fig:DT_maxleafnodes} respectively. 
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{prec_recall_dt_maxdepth}
+        \caption{}
+        \label{fig:prec_recall_dt_maxdepth}
+    \end{subfigure}
+    \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{tradeoff_dt_maxdepth}
+        \caption{}
+        \label{fig:tradeoff_dt_maxdepth}
+    \end{subfigure}
+    \caption{Decision Tree classifier output with different maximum depth values, (a) precision-recall plot (b) Trade-off of model flexibility against training and test accuracy}\label{fig:DT_maxdepth}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{prec_recall_dt_maxleafnodes}
+        \caption{}
+        \label{fig:prec_recall_dt_maxleafnodes}
+    \end{subfigure}
+    \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{tradeoff_dt_maxleafnodes}
+        \caption{}
+        \label{fig:tradeoff_dt_maxleafnodes}
+    \end{subfigure}
+    \caption{Decision Tree classifier output with different maximum leaf nodes values, (a) precision-recall plot (b) Trade-off of model flexibility against training and test accuracy}\label{fig:DT_maxleafnodes}
+\end{figure}
+
+As it's being presented in \cref{fig:DT_maxdepth}, assiginin a maximum depth of 3 would result in best test performance and prevent the classifier from overfitting the prediction on test set, and it is actually the reason behind visualizing the tree in \cref{fig:graphviz} with the mentioned depth. 
+
+Taking a closer look at \cref{fig:graphviz} shows certain paths in the trees are contributing the most in the classification task. For example, looking at branches to the left of the tree, and following along the branch which ends in the very left leaf node of the tree, will show that 227 of samples has been classified on this path. Very similar to such a path can be found on the right hand side of the tree ending up with 126 of the samples inside it. 
+
+Looking into such paths may imply another parameter in which would be important in interpreting the decision trees. This parameter is an indicator of how much a features is contributing in the classification process.  Takin another look into \cref{fig:graphviz} on the node on the very left of the tree containing 230 samples, although it contains a considerable amount of the samples, but applying the $area\_se \leq 48.7$ only extract 3 samples to the benign class and the remaining 227 samples are still in the malignant class which would imply that \emph{$area\_se$} is a less contributing feature in classification task, comparing to for instance \emph{$texture\_mean$} feature, which extracts 5 malignant samples out of 15 benign ones. Feature importance can be drawn for all the features of the dataset by the same concept, and it is a value between zero and one, one being the most contributing and zero being no contribution at all. These values are calculated for this dataset and is shown in \cref{fig:feature_importance}. Important to notice is that, although in this tree, the higher features in the tree hierarchy has more importance than the lower one, but this is not always the case and it is because as discussed in \cref{sec:theo}, the splitting process is \emph{greedy}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{feature_importance}
+	\caption{Feature importance on the decision tree implemented for the dataset}
+	\label{fig:feature_importance}
+\end{figure}
+
+Important to notice that low feature importance does not necessarily mean that the feature is uninformative, but it only means that the tree has not chose it, probably because another feature encoding the same information \citep{muller2016introduction}. There are many features which have zero importance and that is because the tree has the depth of 3, which means only 7 ($1+2+4$) features has the chance to contribute in the tree and these were the best fit. Of course  having deeper trees would result in more features contributing in the tree. 
 
 \paragraph{(k-)Nearest Neighbor (JK).} The cross-validated precision-recall results for the k-NN classifier can be seen in \cref{fig:knn1}. Most generally, the classifier achieves very good performance on the data set.
 As is usually expected, an initial increase in the $k$ number of neighbors considered in the majority vote increases the performance of classification as this helps stabilize the prediction against outliers. However, when too many neighbors are considered, the predictive power of the classifier should decrease, since neighbors that are too far away, and are therefore likely to be of a different class, contribute to the majority vote. One can weigh the votes of each neighbor by the inverse of the distance from the instance to classify to somewhat remedy this problem.
