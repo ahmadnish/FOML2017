@@ -592,7 +592,7 @@ A simple MLP with \SI{30} input nodes, \SI{300} nodes in a single hidden layer, 
 However, due to the reasons mentioned above no cross validation was performed, and the values are therefore without error. Due to the stochastic nature of the batch training, the values vary slightly between different sessions. However, even though no hyperparameter optimization was performed, the test set classification performance of a simple MLP is fairly high and comparable the other presented algorithms.
 
 \section{Discussion (AN)}
-\label{sec:discu}
+ \label{sec:discu}
 
 We have implemented different machine learning methods in this project, Linear and non-linear methods, parametric and non parametric, generative and discriminative methods. Starting with the two linear methods, Logistic regression and LDA are closely connected though they have different concepts. As mentioned in \cref{sec:theo}, LDA is mostly implemented when there is more than two classes. While both the methods produce linear decision boundaries, they have different fitting procedures. LDA assumes the observations are drawn from a Gaussian distribution, an assumption which when is not met, would result in weak predictions, as it is the case in this database. Results on Logistic Regression are better in all measured metrics. 
 
@@ -609,7 +609,7 @@ Migrating toward Generative non-parametric methods, we've implemented the decisi
 %TODO read up, there was some way to make cross validation less noisy, that we could have used
 
 
-\section{Summary}
+\section{Summary } In this final project we tried to implement the \emph{classical} data exploration tasks and basic machine learning tools and algorithms on the Wisconsin Breast Cancer dataset. The task is a classification of predicting whether the feature vectors, generated from cell nuclei of a person, correspond to a breast cancer or not. The algorithms that are applied are as follows: Logistic Regression, LDA, QDA, K-Nearest Neighbours, Decision Trees, Random Forests, Support Vector Machines, and Multilayer Perceptrons. The dataset is not that complicated and with even small number of instances, a fairly good result has been achieved from the above mentioned method.
 \label{sec:sum}
 
 %TODO most / all? our algorithms reached performance atleast par with what original authors published
