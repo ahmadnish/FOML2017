@@ -235,6 +235,17 @@ Prediction is performed by first dividing the predictor space into $\mathcal{J}$
 
 Decision trees are pretty much prone to over-fitting by asking too much questions. Such models would result in a pretty much pure leaves and high accuracy on training set, but poor performance on test sets. Two major strategies would be recommended to take in such cases to reduce the variance on the training set. First would clearly be asking less questions, resulting in smaller trees with fewer splits, and fewer regions $\mathcal{R}_{1}, \mathcal{R}_{2},..., \mathcal{R}_{\mathcal{J}}$. This approach is also called \emph{pre-pruning} and can be implemented in different ways, one would be by introducing a threshold to how informative are the questions and stop whenever there is no question that would result a changes higher (or lower) than the threshold. \footnote{a rather short-sighted approach because of the tree making process being greedy, which will result in early stoppage of the process} Other method would simply be stopping the method after certain number of questions in a certain depth. The second strategy would be to grow a large tree at first and then \emph{prune} the leaves with less or no information to obtain a \emph{subtree}. 
 
+Decision trees have the advantage of being simple to explain, simple to display graphically, and more over, there is no need to do any preprocessing like normalization or standardization of features and that is because the algorithm is invariant to scaling of the data. However, this method has shown high tendency to being over fit even with applying pre-pruning to it. This is why ensemble methods of using multiple trees explained in next section is usually  used in such applications. In \cref{sec:expe} we'll apply decision trees on the data set with pre-pruning parameters as a tuning parameter to find the best bias-variance trade off. 
+
+
+\paragraph{Random Forests (AN).} Ensemble methods apply different machine learning models together resulting in models with better performance. Of these ensemble methods, Random Forests showed to be effective in both Classification and regression tasks. Random Forests basically uses decision trees as the building blocks for the model. As we mentioned in previous section, the main disadvantage of decision trees is that it tends to overfit to training data and they don't have good predictions on test set. However, in random forest we try to overcome this by the ensemble of different trees together and the concept is as follows: Each tree will try to predict a certain target but it would overfit in certain direction, however applying many of them and averaging the results would lower the overfitting and maintaining the same prediction results, a process know as \emph{decorrelation} of trees. 
+
+There are other methods in which they implement number of decision trees in their model, like \emph{bagging} or \emph{boosting}, however random forests are different in which they introduce randomness in their tree building process to make sure that each tree does a different task and is different. This process is ensured by combining two different random process: first is the random selection of data points, and second is random selection of the features.
+
+This process is starts by building a number of decision trees on \emph{bootstrapped} training samples. Bootstrapped samples are made by drawing samples from the set in random and allowing the samples to be repetitive. This will result in data set as big as the main data set, with some data being missed, and some of them being repeated. After making bootstrapped samples on the original data set, here comes the second random process, the random feature selection, and it works as follows: we start to build the decision trees on the bootstrapped sample, however this time, we'll limit the process of finding the best feature for each test to a certain group of random chosen features set, and this random feature selection is repeated on each and every node built in tree. 
+
+
+
 \paragraph{Support Vector Machine (JK).} Out of all of the presented algorithms in the lecture, Support Vector Machines (SVMs) are among the most powerful and widely used. Similar to the previously presented linear discriminant analysis / logistic regression, in SVM, decision planes are trained to discern between positive and negative instances of the data. When the data is linearly separable, i.e.\  there are multiple hyperplanes that perfectly separate the different classes, SVM chooses that hyperplane which maximizes the so-called \emph{safety margin}
 \begin{align}
 	\max_{\beta, \beta_0} M = 	\max_{\beta, \beta_0} \left\{ \min_i Y_i ( X_i \beta + \beta_0) \right\} \, .
@@ -409,8 +420,15 @@ As \cref{fig:graphviz} is limited to the certain depth of 3, bigger and more dee
     \caption{Decision Tree classifier output with different maximum leaf nodes values, (a) precision-recall plot (b) Trade-off of model flexibility against training and test accuracy}\label{fig:DT_maxleafnodes}
 \end{figure}
 
-As it's being presented in \cref{fig:DT_maxdepth}, assiginin a maximum depth of 3 would result in best test performance and prevent the classifier from overfitting the prediction on test set, and it is actually the reason behind visualizing the tree in \cref{fig:graphviz} with the mentioned depth. 
+As it's being presented in \cref{fig:DT_maxdepth}, assigning a maximum depth of 3 would result in best test performance and prevent the classifier from overfitting the prediction on test set, and it is actually the reason behind visualizing the tree in \cref{fig:graphviz} with the mentioned depth. The results are:
 
+\begin{align*}
+	\text{accuracy} &= 0.94 \pm 0.025 \\
+	\text{precision} &= 0.92 \pm 0.05 \\
+	\text{recall} &= 0.91 \pm 0.06 \, .
+\end{align*}
+
+later we'll show performing methods of ensembles of trees, like Random Forests would lower the overfitting and enhance the prediction.
 Taking a closer look at \cref{fig:graphviz} shows certain paths in the trees are contributing the most in the classification task. For example, looking at branches to the left of the tree, and following along the branch which ends in the very left leaf node of the tree, will show that 227 of samples has been classified on this path. Very similar to such a path can be found on the right hand side of the tree ending up with 126 of the samples inside it. 
 
 Looking into such paths may imply another parameter in which would be important in interpreting the decision trees. This parameter is an indicator of how much a features is contributing in the classification process.  Takin another look into \cref{fig:graphviz} on the node on the very left of the tree containing 230 samples, although it contains a considerable amount of the samples, but applying the $area\_se \leq 48.7$ only extract 3 samples to the benign class and the remaining 227 samples are still in the malignant class which would imply that \emph{$area\_se$} is a less contributing feature in classification task, comparing to for instance \emph{$texture\_mean$} feature, which extracts 5 malignant samples out of 15 benign ones. Feature importance can be drawn for all the features of the dataset by the same concept, and it is a value between zero and one, one being the most contributing and zero being no contribution at all. These values are calculated for this dataset and is shown in \cref{fig:feature_importance}. Important to notice is that, although in this tree, the higher features in the tree hierarchy has more importance than the lower one, but this is not always the case and it is because as discussed in \cref{sec:theo}, the splitting process is \emph{greedy}.
@@ -422,7 +440,45 @@ Looking into such paths may imply another parameter in which would be important 
 	\label{fig:feature_importance}
 \end{figure}
 
-Important to notice that low feature importance does not necessarily mean that the feature is uninformative, but it only means that the tree has not chose it, probably because another feature encoding the same information \citep{muller2016introduction}. There are many features which have zero importance and that is because the tree has the depth of 3, which means only 7 ($1+2+4$) features has the chance to contribute in the tree and these were the best fit. Of course  having deeper trees would result in more features contributing in the tree. 
+Important to notice that low feature importance does not necessarily mean that the feature is uninformative, but it only means that the tree has not chose it, probably because another feature encoding the same information \citep{muller2016introduction}. There are many features which have zero importance and that is because the tree has the depth of 3, which means only 7 ($1+2+4$) features has the chance to contribute in the tree and these were the best fit. Of course having deeper trees would result in more features contributing in the tree, or as we metioned in \cref{sec:theo}, random forest would exploit much more number of features, due to it's random feature selection, coming in next section.
+
+\paragraph{Random Forests (AN)} The random forests model gets it's power from the different decision trees it exploits. A parameter which can be set in it's class in Scikit Learn module. Applying the classifier in different number of decision trees would make the process of tuning the classifier possible. Results are showed in \cref{fig:RF}.
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{prec_recall_rf}
+        \caption{}
+        \label{fig:prec_recall_rf}
+    \end{subfigure}
+    \begin{subfigure}{0.45\textwidth}
+        \includegraphics[width=\textwidth]{tradeoff_rf}
+        \caption{}
+        \label{fig:tradeoff_rf}
+    \end{subfigure}
+    \caption{Random Forests classifier output for different number of trees, (a) precision-recall plot (b) Trade-off of model flexibility against training and test accuracy}\label{fig:RF}
+\end{figure}
+
+we are observing an enhance in our test prediction right away from taking even 4 or 8 trees in our model. This means random forests model overfits less than any decision tree individually. We are achieving the same what a fine tuned decision tree did with 4 trees and with out any pruning or pre-pruning(Note that pruning and pre-pruning is possible in Random Forests models and it may achieve in better results, depends on the dataset). The best results are scored with 15 trees:
+
+\begin{align*}
+	\text{accuracy} &= 0.968 \pm 0.015 \\
+	\text{precision} &= 0.97 \pm 0.025 \\
+	\text{recall} &= 0.947 \pm 0.028 \, .
+\end{align*}
+
+Note that random forests models usually uses lot more trees, in hundreds or even thousands, however, we have achieved the same accuracy for thousand trees, with a simple model of 15 ones. This shows how random forests are robust to overfitting and adding more trees wouldn't deteriorate the results anyhow. 
+
+As we were expecting in a random forest model, much more features will contribute in the classification task, and that is due to the random feature selection routine embedded in this model, resulting in much more informative feature importance, depicted in \cref{fig:feature_importance_rf}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=.6\textwidth]{feature_importance_rf}
+	\caption{Feature importance on the random forest implemented for the dataset}
+	\label{fig:feature_importance_rf}
+\end{figure}
+
+Noteworthy to add that one can tune the parameters for random forest by adjusting \emph{$max\_features$} parameter, however setting it to \emph{auto} would normally result in the same results, more or less.
 
 \paragraph{(k-)Nearest Neighbor (JK).} The cross-validated precision-recall results for the k-NN classifier can be seen in \cref{fig:knn1}. Most generally, the classifier achieves very good performance on the data set.
 As is usually expected, an initial increase in the $k$ number of neighbors considered in the majority vote increases the performance of classification as this helps stabilize the prediction against outliers. However, when too many neighbors are considered, the predictive power of the classifier should decrease, since neighbors that are too far away, and are therefore likely to be of a different class, contribute to the majority vote. One can weigh the votes of each neighbor by the inverse of the distance from the instance to classify to somewhat remedy this problem.
