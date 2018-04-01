@@ -591,8 +591,18 @@ A simple MLP with \SI{30} input nodes, \SI{300} nodes in a single hidden layer, 
 \end{align*}
 However, due to the reasons mentioned above no cross validation was performed, and the values are therefore without error. Due to the stochastic nature of the batch training, the values vary slightly between different sessions. However, even though no hyperparameter optimization was performed, the test set classification performance of a simple MLP is fairly high and comparable the other presented algorithms.
 
-\section{Discussion}
+\section{Discussion (AN)}
 \label{sec:discu}
+
+We have implemented different machine learning methods in this project, Linear and non-linear methods, parametric and non parametric, generative and discriminative methods. Starting with the two linear methods, Logistic regression and LDA are closely connected though they have different concepts. As mentioned in \cref{sec:theo}, LDA is mostly implemented when there is more than two classes. While both the methods produce linear decision boundaries, they have different fitting procedures. LDA assumes the observations are drawn from a Gaussian distribution, an assumption which when is not met, would result in weak predictions, as it is the case in this database. Results on Logistic Regression are better in all measured metrics. 
+
+Of the non parametric methods in Machine Learning, the nearest neighbour and K-nearest neighbours are of the famous methods, mostly because it's simplicity and good performance over all. A fact that is shown in performing this classifier on our data set and the good performance that it resulted to. With no assumption made on the shape of data set, this method usually dominates the linear methods when the decision boundary is highly non-linear. Downside of K-NN is that it does not give any information about feature importance. 
+
+Usually QDA is assumed to be a compromise between the two linear LDA method, and the non-parametric K-NN method. However, due to the fact that the dataset doesn't comply with Gaussian distribution much, QDA doesn't change much from LDA in thie evaluation.
+
+Migrating toward Generative non-parametric methods, we've implemented the decision trees on the dataset. Having really simple display of the classification with tree graphs is of important advantage of this method, though it lacks robustness and overfits pretty fast on training data. A problem that it's solution leads to the Random Forests method in which applies different random trees on different random combination of the methods for random selection of the features, which yielded to noticeable enhance in our prediction across all the metrics. 
+
+
 
 %TODO unfortunately original images are not available. otherwise could have trained CNN to do it all automatically just like thorsten did in his paper
 %TODO essentially not comparable with the high noise present
