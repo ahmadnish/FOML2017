@@ -373,15 +373,38 @@ We started by implementing the logistic regression classifier on the data set fo
 \end{figure}
 
 
-As \cref{fig:logistic_regression} shows, best precision-recall values are achieved with C = 0.1 and it's clear that the test precision is experiencing a peak on this value of regularization, a fact clearly shown on the train-test accuracy plot showing the bias-variance trade off point of C = 0.1 and the default C equal to 1 is underfitting. 
+As \cref{fig:logistic_regression} shows, best precision-recall values are achieved with C = 0.1 and it's clear that the test precision is experiencing a peak on this value of regularization, a fact clearly shown on the train-test accuracy plot showing the bias-variance trade off point of C = 0.1 and the default C equal to 1 is underfitting. The results on the mentioned regularization are as follow:
+
+\begin{align*}
+	\text{accuracy} &= 0.982 \pm 0.011 \\
+	\text{precision} &= 0.989 \pm 0.021 \\
+	\text{recall} &= 0.963 \pm 0.032 \, .
+\end{align*}
 
 
 
 %TODO You may add the plot for coefficient's learned with different L1 and L2 penalty adapted from 
 
+\paragraph{LDA and QDA (AN).} As explained in \cref{sec:theo}, there is no much motivation in applying LDA to achieve better model than the already applied linear model of logistic regression, however since this study is doing a comparison on the available models, for the sake of comprehensiveness of the report, we have applied the classifiers and the result of it's performance is as follows:
+
+\begin{align*}
+	\text{accuracy} &= 0.95 \pm 0.017\\
+	\text{precision} &= 0.988 \pm 0.023 \\
+	\text{recall} &= 0.89\pm 0.043 \, .
+\end{align*}
+
+and for QDA is:
+
+\begin{align*}
+	\text{accuracy} &= 0.957 \pm 0.019 \\
+	\text{precision} &= 0.943 \pm 0.054 \\
+	\text{recall} &= 0.943 \pm 0.049 \, .
+\end{align*}
+
+
 \paragraph{Decision Trees (AN).} Of cardinal advantages of Decision trees is the ability of clearly showing and explaining the process of classification or regression even to non expert people, especially the one with low depth trees. \cref{fig:graphviz} shows such a representation for a tree made with depth of 3. 
 
-\begin{figure}
+\begin{figure}[h]
 	\centering
 	\includegraphics[width=\textwidth]{graphviz}
 	\caption{Representation of the decision tree built on the dataset}
